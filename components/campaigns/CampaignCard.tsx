@@ -8,7 +8,13 @@ type Props = { campaign: Campaign };
 export default function CampaignCard({ campaign }: Props) {
   return (
     <article className="rounded-2xl bg-white overflow-hidden shadow-sm">
-      <Image src={campaign.image} alt={campaign.title} width={420} height={230} className="w-full h-48 object-cover" />
+      <Image
+        src={campaign.image}
+        alt={campaign.title}
+        width={420}
+        height={230}
+        className="w-full h-48 object-cover"
+      />
       <div className="p-4 space-y-3">
         <h3 className="text-xl font-semibold">{campaign.title}</h3>
         <p className="text-sm text-stone-600">

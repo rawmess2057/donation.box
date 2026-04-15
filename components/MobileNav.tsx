@@ -1,6 +1,7 @@
 'use client';
 
 import {
+    Compass,
     Home,
     PlusCircle,
     Sparkles,
@@ -11,6 +12,7 @@ import { usePathname } from 'next/navigation';
 
 const navItems = [
     { label: 'Home', icon: Home, href: '/' },
+    { label: 'Explore', icon: Compass, href: '/explore' },
     { label: 'Create', icon: PlusCircle, href: '/create' },
     { label: 'Impact', icon: Sparkles, href: '/impact' },
     { label: 'Profile', icon: User, href: '/profile' },
@@ -21,7 +23,7 @@ export default function MobileNav() {
 
     return (
         <nav className="fixed top-0 left-0 w-full h-20 bg-[#fcf9f1]/80 dark:bg-stone-950/80 backdrop-blur-xl z-50 flex justify-around items-center px-4 pt-safe no-border tonal-layering shadow-[0_4px_24px_rgba(28,28,23,0.08)] rounded-b-[32px]">
-            <div className="w-full max-w-md mx-auto flex justify-around items-center">
+            <div className="w-full max-w-2xl mx-auto flex justify-around items-center">
                 {navItems.map((item) => {
                     const isActive = pathname === item.href;
 

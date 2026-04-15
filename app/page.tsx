@@ -90,7 +90,7 @@ export default function Hero() {
         </div>
       </section>
 
-      <section className="px-4 pb-12">
+      <section className="px-4  pt-10 pb-12">
         <div className="max-w-7xl mx-auto bg-stone-200/80 rounded-3xl px-6 py-5 grid grid-cols-3 gap-4 text-center">
           <div>
             <p className="text-[#97422f] text-4xl font-bold leading-none">$1.2M+</p>

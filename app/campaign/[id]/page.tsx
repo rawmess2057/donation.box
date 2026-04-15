@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import DonationPanel from "@/components/campaigns/DonationPanel";
+import CampaignDonateClient from "@/components/campaigns/CampaignDonateClient";
 
 type CampaignDetail = {
   id: string;
@@ -53,6 +53,9 @@ const MOCK_CAMPAIGNS: CampaignDetail[] = [
   },
 ];
 
+const DONATION_RECIPIENT =
+  process.env.NEXT_PUBLIC_DONATION_RECIPIENT ?? "";
+
 function getCampaignById(id: string) {
   return MOCK_CAMPAIGNS.find((c) => c.id === id);
 }
@@ -102,10 +105,11 @@ export default async function CampaignDetailPage({
           <p className="leading-relaxed text-stone-700">{campaign.story}</p>
         </article>
 
-        <DonationPanel
+        <CampaignDonateClient
           raised={campaign.raised}
           goal={campaign.goal}
           currency={campaign.currency}
+          recipientAddress={DONATION_RECIPIENT}
         />
       </section>
     </main>
