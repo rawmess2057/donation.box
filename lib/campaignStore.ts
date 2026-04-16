@@ -36,3 +36,20 @@ export function appendCreatedCampaign(campaign: CreatedCampaign) {
   const updated = [campaign, ...existing];
   window.localStorage.setItem(CREATED_CAMPAIGNS_KEY, JSON.stringify(updated));
 }
+
+export function updateCampaignRaised(campaignId: string, addedAmount: number) {
+  if (typeof window === "undefined") return;
+  const existing = readCreatedCampaigns();
+  const updated = existing.map((campaign) => {
+    if (campaign.id === campaignId) {
+      const newRaised = campaign.raised + addedAmount;
+      return {
+        ...campaign,
+        raised: newRaised,
+        progress: Math.min(100, Math.round((newRaised / campaign.goal) * 100)),
+      };
+    }
+    return campaign;
+  });
+  window.localStorage.setItem(CREATED_CAMPAIGNS_KEY, JSON.stringify(updated));
+}

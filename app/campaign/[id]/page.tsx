@@ -1,6 +1,10 @@
+"use client";
+
+import { useParams } from "next/navigation";
+import { useMemo, useState } from "react";
 import Image from "next/image";
-import { notFound } from "next/navigation";
 import CampaignDonateClient from "@/components/campaigns/CampaignDonateClient";
+import { readCreatedCampaigns, CreatedCampaign } from "@/lib/campaignStore";
 
 type CampaignDetail = {
   id: string;
@@ -49,27 +53,60 @@ const MOCK_CAMPAIGNS: CampaignDetail[] = [
     goal: 2000,
     currency: "USDC",
     verified: true,
-    
   },
 ];
 
 const DONATION_RECIPIENT =
   process.env.NEXT_PUBLIC_DONATION_RECIPIENT ?? "";
 
-function getCampaignById(id: string) {
+function convertCreatedCampaignToDetail(campaign: CreatedCampaign): CampaignDetail {
+  return {
+    id: campaign.id,
+    title: campaign.title,
+    subtitle: campaign.category,
+    story: campaign.story,
+    image: campaign.image,
+    raised: campaign.raised,
+    goal: campaign.goal,
+    currency: campaign.currency,
+    verified: false, // User-created campaigns are not verified by default
+  };
+}
+
+function getCampaignById(id: string, createdCampaigns: CreatedCampaign[]): CampaignDetail | undefined {
+  // First check user-created campaigns
+  const created = createdCampaigns.find((c) => c.id === id);
+  if (created) {
+    return convertCreatedCampaignToDetail(created);
+  }
+
+  // Then check mock campaigns
   return MOCK_CAMPAIGNS.find((c) => c.id === id);
 }
 
-export default async function CampaignDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const campaign = getCampaignById(id);
+export default function CampaignDetailPage() {
+  const params = useParams();
+  const id = params.id as string;
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const createdCampaigns = useMemo(() => readCreatedCampaigns(), [refreshTrigger]);
+  const campaign = useMemo(
+    () => getCampaignById(id, createdCampaigns),
+    [id, createdCampaigns]
+  );
+
+  // Determine if this is a created campaign for the ID detection
+  const isCreatedCampaign = campaign && createdCampaigns.some((c) => c.id === campaign.id);
 
   if (!campaign) {
-    notFound();
+    return (
+      <main className="min-h-screen bg-[#F7F3EC] px-4 pt-28 py-10">
+        <div className="mx-auto max-w-6xl text-center">
+          <h1 className="text-3xl font-bold text-[#1f2937]">Campaign not found</h1>
+          <p className="mt-2 text-stone-600">This campaign doesn't exist or has been removed.</p>
+        </div>
+      </main>
+    );
   }
 
   return (
@@ -110,6 +147,8 @@ export default async function CampaignDetailPage({
           goal={campaign.goal}
           currency={campaign.currency}
           recipientAddress={DONATION_RECIPIENT}
+          campaignId={isCreatedCampaign ? id : undefined}
+          onDonationSuccess={() => setRefreshTrigger((prev) => prev + 1)}
         />
       </section>
     </main>

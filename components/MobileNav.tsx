@@ -4,7 +4,7 @@ import {
     Compass,
     Home,
     PlusCircle,
-    Sparkles,
+    BarChart3,
     User,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -14,7 +14,7 @@ const navItems = [
     { label: 'Home', icon: Home, href: '/' },
     { label: 'Explore', icon: Compass, href: '/explore' },
     { label: 'Create', icon: PlusCircle, href: '/create' },
-    { label: 'Impact', icon: Sparkles, href: '/impact' },
+    { label: 'Dashboard', icon: BarChart3, href: '/dashboard' },
     { label: 'Profile', icon: User, href: '/profile' },
 ];
 

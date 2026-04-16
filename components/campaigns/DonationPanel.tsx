@@ -12,7 +12,7 @@ type DonationPanelProps = {
   onDonate?: (amount: number, currency: "USDC" | "USD") => void;
 };
 
-const PRESET_AMOUNTS = [5, 10, 25, 50];
+const PRESET_AMOUNTS = [0.1, 0.5, 1, 2];
 
 function formatMoney(value: number) {
   return value.toLocaleString(undefined, {
@@ -25,11 +25,11 @@ export default function DonationPanel({
   raised,
   goal,
   currency = "USDC",
-  minDonation = 1,
-  maxDonation = 25000,
+  minDonation = 0.01,
+  maxDonation = 10,
   onDonate,
 }: DonationPanelProps) {
-  const [selectedAmount, setSelectedAmount] = useState<number>(10);
+  const [selectedAmount, setSelectedAmount] = useState<number>(0.5);
   const [customAmount, setCustomAmount] = useState<string>("");
 
   const progress = useMemo(() => {
