@@ -5,6 +5,7 @@ import { Share2, Eye, MousePointer2, Share as ShareIcon, Heart } from "lucide-re
 import Link from "next/link";
 import { readCreatedCampaigns, getCampaignDonations } from "@/lib/campaignStore";
 import { truncateAddress, type RecentDonation } from "@/lib/transactionFetcher";
+import PostImpact from "@/components/impact/PostImpact";
 import type { CreatedCampaign } from "@/lib/campaignStore";
 
 type CampaignStats = {
@@ -161,29 +162,31 @@ export default function CreatorDashboard({ creatorAddress }: { creatorAddress: s
               </div>
 
               {/* Share Section */}
-              <div className="bg-gradient-to-br from-[#AEEEEB] to-[#93D2CF] rounded-2xl p-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-[#266866] flex items-center justify-center flex-shrink-0">
-                    <ShareIcon className="w-6 h-6 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-bold text-[#1C1C17] mb-1">Share the Magic</h3>
-                    <p className="text-sm text-[#55423E] mb-4">
-                      Get your supporters to share this campaign and reach more people.
-                    </p>
-                    <button
-                      onClick={() => {
-                        const url = `${window.location.origin}/campaign/${selectedCampaign.id}`;
-                        navigator.clipboard.writeText(url);
-                        alert("Campaign URL copied to clipboard!");
-                      }}
-                      className="inline-flex items-center gap-2 bg-white text-[#266866] font-bold px-4 py-2 rounded-full hover:bg-stone-50 transition"
-                    >
-                      <Share2 size={16} />
-                      Post Impact Update
-                    </button>
+              <div className="space-y-4">
+                <div className="bg-gradient-to-br from-[#AEEEEB] to-[#93D2CF] rounded-2xl p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-full bg-[#266866] flex items-center justify-center flex-shrink-0">
+                      <ShareIcon className="w-6 h-6 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-[#1C1C17] mb-1">Share the Magic</h3>
+                      <p className="text-sm text-[#55423E]">
+                        Get your supporters to share this campaign and reach more people.
+                      </p>
+                    </div>
                   </div>
                 </div>
+
+                {/* Post Impact Update Button */}
+                <PostImpact
+                  campaignId={selectedCampaign.id}
+                  campaignTitle={selectedCampaign.title}
+                  campaignImage={selectedCampaign.image}
+                  creatorAddress={creatorAddress}
+                  onPostSuccess={() => {
+                    // Could trigger a refresh or show a success message
+                  }}
+                />
               </div>
 
               {/* Recent Donations */}

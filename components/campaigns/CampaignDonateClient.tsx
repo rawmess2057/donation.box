@@ -14,6 +14,7 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import DonationPanel from "@/components/campaigns/DonationPanel";
 import DonationSuccessScreen from "@/components/campaigns/DonationSuccessScreen";
 import { updateCampaignRaised, addCampaignDonation } from "@/lib/campaignStore";
+import { addDonationToFeed } from "@/lib/impactFeedStore";
 
 type CampaignDonateClientProps = {
   raised: number;
@@ -21,6 +22,9 @@ type CampaignDonateClientProps = {
   currency: "USDC" | "USD";
   recipientAddress: string;
   campaignId?: string;
+  campaignTitle?: string;
+  campaignImage?: string;
+  campaignCreator?: string;
   onDonationSuccess?: (amount: number) => void;
 };
 
@@ -30,6 +34,9 @@ export default function CampaignDonateClient({
   currency,
   recipientAddress,
   campaignId,
+  campaignTitle = "Campaign",
+  campaignImage,
+  campaignCreator,
   onDonationSuccess,
 }: CampaignDonateClientProps) {
   const { connection } = useConnection();
@@ -239,6 +246,17 @@ export default function CampaignDonateClient({
           signature,
           timestamp: Date.now(),
         });
+        // Add donation to impact feed
+        if (campaignCreator) {
+          addDonationToFeed(
+            campaignId,
+            campaignTitle,
+            campaignImage,
+            payer.toBase58(),
+            amount,
+            campaignCreator
+          );
+        }
         onDonationSuccess?.(amount);
       }
     } catch (error) {

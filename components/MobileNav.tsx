@@ -6,6 +6,7 @@ import {
     PlusCircle,
     BarChart3,
     User,
+    Flame,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -14,6 +15,7 @@ const navItems = [
     { label: 'Home', icon: Home, href: '/' },
     { label: 'Explore', icon: Compass, href: '/explore' },
     { label: 'Create', icon: PlusCircle, href: '/create' },
+    { label: 'Impact', icon: Flame, href: '/impact' },
     { label: 'Dashboard', icon: BarChart3, href: '/dashboard' },
     { label: 'Profile', icon: User, href: '/profile' },
 ];

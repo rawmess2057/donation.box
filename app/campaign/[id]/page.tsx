@@ -144,6 +144,9 @@ export default function CampaignDetailPage() {
               currency={campaign.currency}
               recipientAddress={DONATION_RECIPIENT}
               campaignId={isCreatedCampaign ? id : undefined}
+              campaignTitle={campaign.title}
+              campaignImage={campaign.image}
+              campaignCreator={isCreatedCampaign ? createdCampaigns.find(c => c.id === id)?.creator : undefined}
               onDonationSuccess={() => setRefreshTrigger((prev) => prev + 1)}
             />
           </>
