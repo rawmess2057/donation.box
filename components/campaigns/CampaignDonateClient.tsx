@@ -8,11 +8,12 @@ import {
   PublicKey,
   SystemProgram,
   Transaction,
+  SendTransactionError,
 } from "@solana/web3.js";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import DonationPanel from "@/components/campaigns/DonationPanel";
 import DonationSuccessScreen from "@/components/campaigns/DonationSuccessScreen";
-import { updateCampaignRaised } from "@/lib/campaignStore";
+import { updateCampaignRaised, addCampaignDonation } from "@/lib/campaignStore";
 
 type CampaignDonateClientProps = {
   raised: number;
@@ -79,7 +80,8 @@ export default function CampaignDonateClient({
     rpcConnection: Connection,
     payer: PublicKey,
     amount: number,
-  ) => {
+    retryCount: number = 0,
+  ): Promise<string> => {
     if (!recipientAddress) {
       throw new Error(
         "Set NEXT_PUBLIC_DONATION_RECIPIENT with a valid Solana wallet address.",
@@ -115,7 +117,8 @@ export default function CampaignDonateClient({
 
       // Send the signed transaction
       const signature = await rpcConnection.sendRawTransaction(
-        signedTransaction.serialize()
+        signedTransaction.serialize(),
+        { skipPreflight: false } // Let it fail early if invalid
       );
       console.log("Transaction sent:", signature);
       
@@ -131,11 +134,37 @@ export default function CampaignDonateClient({
       return signature;
     } catch (error) {
       console.error("Transaction error:", error);
+      
+      // Handle SendTransactionError specifically
+      if (error instanceof SendTransactionError) {
+        const logs = error.getLogs ? error.getLogs() : [];
+        console.error("Transaction logs:", logs);
+        
+        // Check if this is an "already processed" error
+        if (error.message && error.message.includes("already been processed")) {
+          console.warn("Transaction was already processed. This is likely a duplicate submission.");
+          // If we haven't retried yet, get a fresh blockhash and try once more
+          if (retryCount < 1) {
+            console.log("Retrying with fresh blockhash...");
+            await new Promise(resolve => setTimeout(resolve, 500)); // Wait 500ms before retry
+            return sendDonationTransaction(rpcConnection, payer, amount, retryCount + 1);
+          }
+          // If we've already retried, throw a specific error
+          throw new Error("TRANSACTION_ALREADY_PROCESSED");
+        }
+      }
+      
       throw error;
     }
   };
 
   const handleDonate = async (amount: number) => {
+    // Prevent multiple simultaneous submissions
+    if (isProcessing) {
+      console.warn("Donation already in progress");
+      return;
+    }
+
     setTxError("");
     setTxSignature("");
 
@@ -170,11 +199,14 @@ export default function CampaignDonateClient({
 
       // Check wallet balance before attempting transaction
       const balance = await connection.getBalance(payer);
-      const lamportsNeeded = Math.max(1, Math.round(amount * LAMPORTS_PER_SOL)) + 5000; // +5000 for fees
+      const donationLamports = Math.max(1, Math.round(amount * LAMPORTS_PER_SOL));
+      // Add generous buffer for compute budget instructions (~0.0001 SOL) + base fees
+      const feeBuffer = 100000; // ~0.0001 SOL for compute budget + transaction fees
+      const lamportsNeeded = donationLamports + feeBuffer;
       
       if (balance < lamportsNeeded) {
         throw new Error(
-          `Insufficient balance. You have ${(balance / LAMPORTS_PER_SOL).toFixed(4)} SOL but need ${(lamportsNeeded / LAMPORTS_PER_SOL).toFixed(4)} SOL.`
+          `Insufficient balance. You have ${(balance / LAMPORTS_PER_SOL).toFixed(4)} SOL but need at least ${(lamportsNeeded / LAMPORTS_PER_SOL).toFixed(4)} SOL.`
         );
       }
 
@@ -200,12 +232,35 @@ export default function CampaignDonateClient({
       // Update campaign raised amount if it's a created campaign
       if (campaignId) {
         updateCampaignRaised(campaignId, amount);
+        // Store donation details for the campaign
+        addCampaignDonation(campaignId, {
+          donor: payer.toBase58(),
+          amount,
+          signature,
+          timestamp: Date.now(),
+        });
         onDonationSuccess?.(amount);
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      console.error("Donation error:", errorMessage);
-      setTxError(errorMessage || "Failed to submit transaction.");
+      
+      // Handle specific error cases
+      if (errorMessage === "TRANSACTION_ALREADY_PROCESSED") {
+        setTxError("Your previous donation might have gone through. Check your wallet or try again in a moment.");
+      } else if (errorMessage.includes("User rejected")) {
+        setTxError("Wallet transaction was cancelled.");
+      } else if (errorMessage.includes("Insufficient balance")) {
+        setTxError(errorMessage);
+      } else if (errorMessage.includes("insufficient lamports")) {
+        setTxError("Your wallet doesn't have enough SOL for this donation. Please add funds and try again.");
+      } else if (errorMessage.includes("already been processed")) {
+        setTxError("Donation already processed. Thank you for your support!");
+      } else if (errorMessage.includes("Simulation failed")) {
+        setTxError("Transaction simulation failed. Your wallet may not have sufficient balance for this donation amount.");
+      } else {
+        console.error("Donation error:", errorMessage);
+        setTxError(errorMessage || "Failed to submit transaction.");
+      }
     } finally {
       setIsProcessing(false);
     }
@@ -226,7 +281,7 @@ export default function CampaignDonateClient({
           donorName={donorName || "Friend"}
           amount={donatedAmount}
           amountInSOL={donatedAmount}
-          currency={currency}
+          currency="SOL"
           txSignature={txSignature}
           impactMessage="Your donation is making a real difference in people's lives. Thank you for your generosity!"
           onDonateAgain={handleDonateAgain}
@@ -239,6 +294,7 @@ export default function CampaignDonateClient({
           raised={raised}
           goal={goal}
           currency={currency}
+          isProcessing={isProcessing}
           onDonate={handleDonate}
         />
 

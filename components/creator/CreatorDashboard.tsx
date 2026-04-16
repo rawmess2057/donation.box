@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Share2, Eye, MousePointer2, Share as ShareIcon, Heart } from "lucide-react";
 import Link from "next/link";
-import { readCreatedCampaigns } from "@/lib/campaignStore";
+import { readCreatedCampaigns, getCampaignDonations } from "@/lib/campaignStore";
+import { truncateAddress, type RecentDonation } from "@/lib/transactionFetcher";
 import type { CreatedCampaign } from "@/lib/campaignStore";
 
 type CampaignStats = {
@@ -20,6 +21,12 @@ export default function CreatorDashboard({ creatorAddress }: { creatorAddress: s
     const all = readCreatedCampaigns();
     return all.filter((c) => c.creator === creatorAddress);
   }, [creatorAddress]);
+
+  // Fetch real donations when component mounts
+  useEffect(() => {
+    // This effect is now just for future expansions
+    // Donations are now stored per campaign in localStorage
+  }, []);
 
   const getCampaignStats = (campaignId: string): CampaignStats => {
     // In a real app, this would come from a backend
@@ -43,6 +50,26 @@ export default function CreatorDashboard({ creatorAddress }: { creatorAddress: s
       amount: amounts[i % amounts.length],
     }));
   };
+
+  // Get donations for the selected campaign from localStorage
+  const displayDonations = selectedCampaign
+    ? (() => {
+        const campaignDonations = getCampaignDonations(selectedCampaign.id);
+        return campaignDonations.length > 0
+          ? campaignDonations.slice(0, 4).map(d => ({
+              name: truncateAddress(d.donor),
+              amount: d.amount,
+              isDynamic: true,
+            }))
+          : getMockDonations().map(d => ({
+              ...d,
+              isDynamic: false,
+            }));
+      })()
+    : getMockDonations().map(d => ({
+        ...d,
+        isDynamic: false,
+      }));
 
   if (myCampaigns.length === 0) {
     return (
@@ -163,19 +190,30 @@ export default function CreatorDashboard({ creatorAddress }: { creatorAddress: s
               <div className="bg-white rounded-2xl p-6 shadow-sm">
                 <h3 className="font-bold text-[#1C1C17] mb-4">Recent Donations</h3>
                 <div className="space-y-3">
-                  {getMockDonations().map((donation, idx) => (
-                    <div key={idx} className="flex items-center justify-between p-3 bg-stone-50 rounded-lg">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-[#97422F] flex items-center justify-center text-white text-xs font-bold">
-                          {donation.name[0]}
+                  {displayDonations.length > 0 ? (
+                    displayDonations.map((donation, idx) => (
+                      <div key={idx} className="flex items-center justify-between p-3 bg-stone-50 rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-[#97422F] flex items-center justify-center text-white text-xs font-bold">
+                            {donation.name[0]}
+                          </div>
+                          <div>
+                            <span className="text-sm font-medium text-stone-900">{donation.name}</span>
+                            {donation.isDynamic && (
+                              <span className="text-xs text-stone-500 ml-2">(verified)</span>
+                            )}
+                          </div>
                         </div>
-                        <span className="text-sm font-medium text-stone-900">{donation.name}</span>
+                        <span className="text-sm font-bold text-[#97422F]">
+                          +{donation.amount.toFixed(2)} SOL
+                        </span>
                       </div>
-                      <span className="text-sm font-bold text-[#97422F]">
-                        +{donation.amount.toFixed(2)} SOL
-                      </span>
-                    </div>
-                  ))}
+                    ))
+                  ) : (
+                    <p className="text-sm text-stone-500 py-4 text-center">
+                      No donations yet
+                    </p>
+                  )}
                 </div>
                 <Link
                   href={`/campaign/${selectedCampaign.id}`}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import CampaignGrid from "@/components/campaigns/CampaignGrid";
 import type { Campaign } from "@/components/campaigns/types";
 import { readCreatedCampaigns } from "@/lib/campaignStore";
@@ -63,7 +63,14 @@ const ALL_CAMPAIGNS: Campaign[] = [
 ];
 
 function useCreatedCampaigns() {
-  return useMemo(() => readCreatedCampaigns(), []);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+
+  useEffect(() => {
+    // Load created campaigns from localStorage only on client
+    setCampaigns(readCreatedCampaigns() as Campaign[]);
+  }, []);
+
+  return campaigns;
 }
 
 export default function ExplorePage() {

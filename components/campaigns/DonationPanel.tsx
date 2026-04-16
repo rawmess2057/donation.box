@@ -9,6 +9,7 @@ type DonationPanelProps = {
   currency?: "USDC" | "USD";
   minDonation?: number;
   maxDonation?: number;
+  isProcessing?: boolean;
   onDonate?: (amount: number, currency: "USDC" | "USD") => void;
 };
 
@@ -27,6 +28,7 @@ export default function DonationPanel({
   currency = "USDC",
   minDonation = 0.01,
   maxDonation = 10,
+  isProcessing = false,
   onDonate,
 }: DonationPanelProps) {
   const [selectedAmount, setSelectedAmount] = useState<number>(0.5);
@@ -139,11 +141,11 @@ export default function DonationPanel({
 
       <button
         type="button"
-        disabled={!isValidAmount}
+        disabled={!isValidAmount || isProcessing}
         className="w-full rounded-xl bg-[#1E6E6B] py-3 font-semibold text-white transition hover:bg-[#185b58] disabled:cursor-not-allowed disabled:opacity-50"
         onClick={handleDonate}
       >
-        Donate ${isValidAmount ? formatMoney(finalAmount) : ""}
+        {isProcessing ? "Processing..." : `Donate ${isValidAmount ? `$${formatMoney(finalAmount)}` : ""}`}
       </button>
 
       <div className="mt-4 flex items-center justify-between rounded-xl bg-[#DCD9D2] px-3 py-2">
