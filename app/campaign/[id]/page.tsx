@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import CampaignDonateClient from "@/components/campaigns/CampaignDonateClient";
+import ShareButton from "@/components/campaigns/ShareButton";
 import { readCreatedCampaigns, CreatedCampaign } from "@/lib/campaignStore";
 
 type CampaignDetail = {
@@ -138,17 +139,20 @@ export default function CampaignDetailPage() {
               <p className="leading-relaxed text-stone-700">{campaign.story}</p>
             </article>
 
-            <CampaignDonateClient
-              raised={campaign.raised}
-              goal={campaign.goal}
-              currency={campaign.currency}
-              recipientAddress={DONATION_RECIPIENT}
-              campaignId={isCreatedCampaign ? id : undefined}
-              campaignTitle={campaign.title}
-              campaignImage={campaign.image}
-              campaignCreator={isCreatedCampaign ? createdCampaigns.find(c => c.id === id)?.creator : undefined}
-              onDonationSuccess={() => setRefreshTrigger((prev) => prev + 1)}
-            />
+            <aside className="flex flex-col gap-4">
+              <ShareButton campaignId={id} campaignTitle={campaign.title} />
+              <CampaignDonateClient
+                raised={campaign.raised}
+                goal={campaign.goal}
+                currency={campaign.currency}
+                recipientAddress={DONATION_RECIPIENT}
+                campaignId={isCreatedCampaign ? id : undefined}
+                campaignTitle={campaign.title}
+                campaignImage={campaign.image}
+                campaignCreator={isCreatedCampaign ? createdCampaigns.find(c => c.id === id)?.creator : undefined}
+                onDonationSuccess={() => setRefreshTrigger((prev) => prev + 1)}
+              />
+            </aside>
           </>
         )}
       </section>
