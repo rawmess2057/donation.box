@@ -58,13 +58,13 @@ export default function Hero() {
             </p>
 
             <div className="flex flex-wrap gap-4 pt-4">
-              <button className="bg-[#C25D2E] hover:bg-[#A14D25] text-white font-semibold text-lg px-10 py-4 rounded-2xl transition-all duration-300 shadow-lg shadow-orange-200">
+              <Link href="/explore" className="bg-[#C25D2E] hover:bg-[#A14D25] text-white font-semibold text-lg px-10 py-4 rounded-2xl transition-all duration-300 shadow-lg shadow-orange-200">
                 Start Exploring
-              </button>
+              </Link>
 
-              <button className="border-2 border-gray-300 hover:border-gray-400 text-gray-700 font-semibold text-lg px-10 py-4 rounded-2xl transition-all duration-300">
+              <Link href="/impact" className="border-2 border-gray-300 hover:border-gray-400 text-gray-700 font-semibold text-lg px-10 py-4 rounded-2xl transition-all duration-300">
                 Learn Our Impact
-              </button>
+              </Link>
             </div>
 
             {/* Trust Signals */}
@@ -115,9 +115,9 @@ export default function Hero() {
       in your community?
     </h2>
 
-    <button className="mt-8 bg-white text-[#236a69] font-semibold px-8 py-3 rounded-full hover:bg-stone-100 transition">
+    <Link href="/create" className="inline-block mt-8 bg-white text-[#236a69] font-semibold px-8 py-3 rounded-full hover:bg-stone-100 transition">
       Start Your Own Campaign
-    </button>
+    </Link>
   </div>
 </section>
     </main>
