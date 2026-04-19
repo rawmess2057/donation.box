@@ -23,16 +23,18 @@ const navItems = [
 
 export default function MobileNav() {
     const pathname = usePathname();
-    const { wallet, connect, select, wallets, publicKey, connecting } = useWallet();
+    const { wallet, disconnect, select, wallets, publicKey, connecting } = useWallet();
 
     const handleWalletClick = async () => {
         try {
-            // If already connected, just return
+            // If already connected, disconnect
             if (publicKey) {
-                console.log("Wallet already connected:", publicKey.toBase58());
+                console.log("Disconnecting wallet");
+                await disconnect();
                 return;
             }
 
+            // If not connected, connect
             // Find a ready wallet (Phantom preferred, then any ready wallet)
             const readyStates = new Set<WalletReadyState>([
                 WalletReadyState.Installed,
@@ -54,11 +56,13 @@ export default function MobileNav() {
 
             console.log("Connecting to wallet:", selectedWallet.adapter.name);
             
-            // Select the wallet which will trigger connection
+            // Select the wallet
             select(selectedWallet.adapter.name);
             
-            // Connect using the hook's connect function
-            await connect();
+            // Call the adapter's connect method directly to trigger Phantom popup
+            // This ensures the permission prompt appears every time
+            await selectedWallet.adapter.connect();
+            console.log("Wallet connected successfully");
         } catch (error) {
             console.error("Wallet connection error:", error);
         }
@@ -71,7 +75,7 @@ export default function MobileNav() {
         if (publicKey) {
             return publicKey.toBase58().slice(0, 6);
         }
-        return 'Wallet';
+        return 'Connect';
     };
 
     return (
@@ -99,12 +103,13 @@ export default function MobileNav() {
                 <button
                     onClick={handleWalletClick}
                     disabled={connecting}
+                    title={publicKey ? "Click to disconnect" : "Click to connect wallet"}
                     className={`flex flex-col items-center justify-center rounded-2xl px-5 py-2 active:scale-90 transition-transform duration-200 cursor-pointer disabled:opacity-50 ${
                         publicKey
-                            ? 'bg-[#2D7774]/10 dark:bg-teal-500/20 text-[#2D7774] dark:text-teal-400'
+                            ? 'bg-[#2D7774]/10 dark:bg-teal-500/20 text-[#2D7774] dark:text-teal-400 hover:bg-[#2D7774]/20 dark:hover:bg-teal-500/30'
                             : connecting
                             ? 'bg-[#97422f]/10 dark:bg-orange-500/20 text-[#97422f] dark:text-orange-400'
-                            : 'text-stone-500 dark:text-stone-400 hover:text-[#266866] dark:hover:text-teal-400 transition-colors'
+                            : 'text-stone-500 dark:text-stone-400 hover:text-[#266866] dark:hover:text-teal-400 hover:bg-stone-100 dark:hover:bg-stone-800/50 transition-colors'
                     }`}
                 >
                     <Wallet className="h-5 w-5" />
