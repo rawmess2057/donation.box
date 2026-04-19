@@ -1,0 +1,30 @@
+[
+  {
+    "id": "campaign_1776581185574_qk2w7c",
+    "title": "Necessitatibus tempo",
+    "subtitle": "Nutrition",
+    "category": "Nutrition",
+    "story": "Voluptatibus distinc",
+    "image": "https://www.sefew.co",
+    "goal": 78,
+    "raised": 1,
+    "currency": "SOL",
+    "creator": "Dd6CCfgnA5aRddzVsVtuZvRqznm18hHtD7poWXrPafZc",
+    "txSignature": "4croGC2KAwwoKuPcaGXgmYqjJV2KSyoDnBobDWDE6puiEJ1xSyeNMDREqSrftVMcUZtMWAUGVsxYTLXxH2i9L7ps",
+    "createdAt": "2026-04-19T06:46:25.574Z",
+    "verified": false,
+    "progress": 1,
+    "donations": [
+      {
+        "donor": "CD69UjQitwnnPwHkFSYNsL2Qh7PW3hdqBNU1cQSrXFj",
+        "amount": 1,
+        "signature": "2BLzQWeNWcCva2rqLkQQ46QEFvAKcW1XZcq1wK5tfTPKukifceFxALWAZqnDdyiZ7qH6xcrxNWzyXkWT5pqAc3zA",
+        "timestamp": 1776581211629,
+        "id": "donation_1776581212528_h6rigr",
+        "likes": 0,
+        "comments": 0
+      }
+    ],
+    "updates": []
+  }
+]

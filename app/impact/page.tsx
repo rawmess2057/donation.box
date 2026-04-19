@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Flame, TrendingUp, Gift } from "lucide-react";
 import FeedItemComponent from "@/components/impact/FeedItemComponent";
-import { getImpactFeedSorted, type FeedItem } from "@/lib/impactFeedStore";
+import type { FeedItem } from "@/lib/campaigns";
 
 type SortOption = "latest" | "trending" | "topDonations";
 
@@ -13,29 +13,37 @@ export default function ImpactFeedPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Load feed items
-    const items = getImpactFeedSorted(sortBy);
-    setFeedItems(items);
-    setIsLoading(false);
+    let active = true;
 
-    // Refresh every 10 seconds to show new donations
+    async function loadFeed() {
+      const response = await fetch(`/api/feed?sortBy=${sortBy}`, { cache: "no-store" });
+      const payload = (await response.json()) as { items?: FeedItem[] };
+
+      if (active) {
+        setFeedItems(payload.items ?? []);
+        setIsLoading(false);
+      }
+    }
+
+    void loadFeed();
     const interval = setInterval(() => {
-      const updated = getImpactFeedSorted(sortBy);
-      setFeedItems(updated);
+      void loadFeed();
     }, 10000);
 
-    return () => clearInterval(interval);
+    return () => {
+      active = false;
+      clearInterval(interval);
+    };
   }, [sortBy]);
 
-  const handleLike = () => {
-    // Refresh feed after like
-    const updated = getImpactFeedSorted(sortBy);
-    setFeedItems(updated);
+  const handleLike = async () => {
+    const response = await fetch(`/api/feed?sortBy=${sortBy}`, { cache: "no-store" });
+    const payload = (await response.json()) as { items?: FeedItem[] };
+    setFeedItems(payload.items ?? []);
   };
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-[#FFF9F0] via-[#FFF5E6] to-[#FFF9F0]">
-      {/* Header */}
       <div className=" bg-[#fcf9f1]/80 border-b border-stone-200 sticky top-3 z-40">
         <div className="max-w-4xl mx-auto px-4 py-2">
           <h1 className="text-3xl font-bold text-[#1C1C17] mb-1">
@@ -45,7 +53,6 @@ export default function ImpactFeedPage() {
             Real-time updates from campaigns making a difference
           </p>
 
-          {/* Sorting Options */}
           <div className="mt-2 flex flex-wrap gap-2">
             <button
               onClick={() => setSortBy("latest")}
@@ -83,7 +90,6 @@ export default function ImpactFeedPage() {
         </div>
       </div>
 
-      {/* Feed */}
       <div className="max-w-4xl mx-auto px-4 py-8">
         {isLoading ? (
           <div className="text-center py-12">
@@ -108,11 +114,7 @@ export default function ImpactFeedPage() {
         ) : (
           <div className="space-y-4">
             {feedItems.map((item) => (
-              <FeedItemComponent
-                key={item.id}
-                item={item}
-                onLike={handleLike}
-              />
+              <FeedItemComponent key={item.id} item={item} onLike={handleLike} />
             ))}
           </div>
         )}

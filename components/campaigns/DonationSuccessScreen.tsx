@@ -1,12 +1,12 @@
 "use client";
 
 import { Share2, Home, X } from "lucide-react";
+import { useMemo } from "react";
 
 type DonationSuccessScreenProps = {
   donorName?: string;
-  amount: number;
   amountInSOL: number;
-  currency: "USDC" | "USD";
+  currency: "SOL";
   txSignature: string;
   impactMessage: string;
   onDonateAgain?: () => void;
@@ -15,7 +15,6 @@ type DonationSuccessScreenProps = {
 
 export default function DonationSuccessScreen({
   donorName = "Friend",
-  amount,
   amountInSOL,
   currency,
   txSignature,
@@ -38,7 +37,16 @@ export default function DonationSuccessScreen({
     }
   };
 
-  const mintId = `e627...${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+  const badgeNumber = useMemo(() => {
+    return txSignature
+      .slice(0, 6)
+      .split("")
+      .reduce((total, char) => total + char.charCodeAt(0), 0);
+  }, [txSignature]);
+  const mintId = useMemo(
+    () => `e627...${txSignature.slice(-4).toUpperCase()}`,
+    [txSignature],
+  );
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
@@ -151,7 +159,7 @@ export default function DonationSuccessScreen({
                     The Hearth Keeper
                   </h3>
                   <p className="text-sm text-[#55423E] font-medium leading-relaxed">
-                    Limited Edition Impact Badge #{Math.floor(Math.random() * 10000)}. Unique digital collectible minted on Solana for the Donation Mission.
+                    Limited Edition Impact Badge #{badgeNumber}. Unique digital collectible minted on Solana for the Donation Mission.
                   </p>
                 </div>
 
@@ -171,7 +179,7 @@ export default function DonationSuccessScreen({
                     </div>
                     <div className="text-white text-right">
                       <p className="uppercase font-bold tracking-tighter opacity-80 text-[9px]">Date</p>
-                      <p className="font-bold">Oct 2024</p>
+                      <p className="font-bold">{new Date().toLocaleDateString()}</p>
                     </div>
                   </div>
                 </div>

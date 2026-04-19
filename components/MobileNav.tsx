@@ -23,7 +23,7 @@ const navItems = [
 
 export default function MobileNav() {
     const pathname = usePathname();
-    const { wallet, disconnect, select, wallets, publicKey, connecting } = useWallet();
+    const { disconnect, select, wallets, publicKey, connecting } = useWallet();
 
     const handleWalletClick = async () => {
         try {

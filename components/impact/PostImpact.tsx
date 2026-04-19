@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Upload, X, Loader } from "lucide-react";
-import { addImpactUpdate } from "@/lib/impactFeedStore";
 
 type PostImpactProps = {
   campaignId: string;
@@ -37,28 +36,34 @@ export default function PostImpact({
 
   const handlePost = async () => {
     if (!content.trim()) {
-      alert("Please write an update message");
+      window.alert("Please write an update message");
       return;
     }
 
     setIsPosting(true);
     try {
-      addImpactUpdate(
-        campaignId,
-        campaignTitle,
-        campaignImage,
-        creatorAddress,
-        content,
-        imagePreview || undefined
-      );
+      const response = await fetch(`/api/campaigns/${campaignId}/updates`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content,
+          image: imagePreview || undefined,
+          creatorAddress,
+        }),
+      });
 
-      // Reset form
+      if (!response.ok) {
+        throw new Error("Failed to post update");
+      }
+
       setContent("");
       setImagePreview(null);
       setIsOpen(false);
       onPostSuccess?.();
     } catch (error) {
-      alert("Failed to post update");
+      window.alert("Failed to post update");
       console.error(error);
     } finally {
       setIsPosting(false);
@@ -79,7 +84,6 @@ export default function PostImpact({
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
           <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
-            {/* Header */}
             <div className="sticky top-0 bg-white border-b border-stone-200 p-4 flex items-center justify-between">
               <h2 className="text-xl font-bold text-[#97422F]">
                 Share Impact Update
@@ -96,9 +100,7 @@ export default function PostImpact({
               </button>
             </div>
 
-            {/* Body */}
             <div className="p-6 space-y-4">
-              {/* Campaign Info */}
               <div className="bg-stone-50 rounded-lg p-3 flex items-center gap-3">
                 {campaignImage && (
                   <img
@@ -117,25 +119,19 @@ export default function PostImpact({
                 </div>
               </div>
 
-              {/* Content Input */}
               <div>
                 <label className="block text-sm font-semibold text-stone-700 mb-2">
                   Your Update (max 500 characters)
                 </label>
                 <textarea
                   value={content}
-                  onChange={(e) =>
-                    setContent(e.target.value.slice(0, 500))
-                  }
-                  placeholder="Share what you've accomplished, photos, stories of impact..."
+                  onChange={(e) => setContent(e.target.value.slice(0, 500))}
+                  placeholder="Share what you&apos;ve accomplished, photos, stories of impact..."
                   className="w-full h-32 p-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#97422F] focus:outline-none resize-none"
                 />
-                <p className="text-xs text-stone-500 mt-1">
-                  {content.length}/500 characters
-                </p>
+                <p className="text-xs text-stone-500 mt-1">{content.length}/500 characters</p>
               </div>
 
-              {/* Image Upload */}
               <div>
                 <label className="block text-sm font-semibold text-stone-700 mb-2">
                   Proof Photo / Evidence
@@ -144,12 +140,8 @@ export default function PostImpact({
                   <label className="border-2 border-dashed border-stone-300 rounded-lg p-6 text-center cursor-pointer hover:border-[#97422F] transition">
                     <div className="flex flex-col items-center gap-2">
                       <Upload size={32} className="text-stone-400" />
-                      <p className="font-semibold text-stone-700">
-                        Click to upload image
-                      </p>
-                      <p className="text-xs text-stone-500">
-                        PNG, JPG up to 10MB
-                      </p>
+                      <p className="font-semibold text-stone-700">Click to upload image</p>
+                      <p className="text-xs text-stone-500">PNG, JPG up to 10MB</p>
                     </div>
                     <input
                       type="file"
@@ -174,19 +166,8 @@ export default function PostImpact({
                   </div>
                 )}
               </div>
-
-              {/* Info */}
-              <div className="bg-blue-50 rounded-lg p-3 border-l-4 border-blue-400">
-                <p className="text-xs text-blue-900">
-                  ✓ Your update will appear in the Global Impact Feed
-                </p>
-                <p className="text-xs text-blue-900">
-                  ✓ All updates are permanent and immutable
-                </p>
-              </div>
             </div>
 
-            {/* Actions */}
             <div className="sticky bottom-0 bg-white border-t border-stone-200 p-4 flex gap-3">
               <button
                 onClick={() => {

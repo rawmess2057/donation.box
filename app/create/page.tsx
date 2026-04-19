@@ -6,7 +6,7 @@ import { WalletReadyState } from "@solana/wallet-adapter-base";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey, Transaction, TransactionInstruction } from "@solana/web3.js";
 import { Buffer } from "buffer";
-import { appendCreatedCampaign } from "@/lib/campaignStore";
+import { createId } from "@/lib/campaigns";
 
 const CATEGORIES = ["Education", "Emergency", "Nutrition", "Health", "Environment"];
 const MEMO_PROGRAM_ID = new PublicKey(
@@ -60,7 +60,7 @@ export default function CreateCampaignPage() {
       return;
     }
     if (!Number.isFinite(sanitizedGoal) || sanitizedGoal <= 0) {
-      setError("Goal amount must be greater than 0.");
+      setError("Goal amount must be greater than 0 SOL.");
       return;
     }
 
@@ -107,43 +107,55 @@ export default function CreateCampaignPage() {
 
       const latestBlockhash = await connection.getLatestBlockhash();
 
-const transaction = new Transaction({
-  feePayer: creator,
-  blockhash: latestBlockhash.blockhash,
-  lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
-}).add(memoIx);
+      const transaction = new Transaction({
+        feePayer: creator,
+        blockhash: latestBlockhash.blockhash,
+        lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+      }).add(memoIx);
 
-const signature = await selectedWallet.adapter.sendTransaction(
-  transaction,
-  connection,
-);
+      const signature = await selectedWallet.adapter.sendTransaction(
+        transaction,
+        connection,
+      );
 
-await connection.confirmTransaction(
-  {
-    signature,
-    blockhash: latestBlockhash.blockhash,
-    lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
-  },
-  "confirmed",
-);
+      await connection.confirmTransaction(
+        {
+          signature,
+          blockhash: latestBlockhash.blockhash,
+          lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+        },
+        "confirmed",
+      );
 
-      appendCreatedCampaign({
-        id: `user-${Date.now()}`,
-        title: title.trim(),
-        category,
-        story: story.trim(),
-        image: image.trim() || "/school.png",
-        goal: sanitizedGoal,
-        raised: 0,
-        progress: 0,
-        currency: "USDC",
-        creator: creator.toBase58(),
-        txSignature: signature,
-        createdAt: new Date().toISOString(),
+      const campaignId = createId("campaign");
+      const response = await fetch("/api/campaigns", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: campaignId,
+          title: title.trim(),
+          subtitle: category,
+          category,
+          story: story.trim(),
+          image: image.trim() || "/school.png",
+          goal: sanitizedGoal,
+          raised: 0,
+          currency: "SOL",
+          creator: creator.toBase58(),
+          txSignature: signature,
+          createdAt: new Date().toISOString(),
+          verified: false,
+        }),
       });
 
-      setStatus("Campaign created on devnet. Redirecting to Explore...");
-      router.push("/explore");
+      if (!response.ok) {
+        throw new Error("Campaign was created on devnet, but saving it in the app failed.");
+      }
+
+      setStatus("Campaign created on devnet. Redirecting to campaign...");
+      router.push(`/campaign/${campaignId}`);
     } catch (createError) {
       const message =
         createError instanceof Error
@@ -167,7 +179,7 @@ await connection.confirmTransaction(
             Launch a Story
           </h1>
           <p className="mt-3 text-sm text-stone-600">
-            Create on Solana devnet and publish your campaign to Explore.
+            Create a real campaign record backed by Solana devnet and publish it for shared testing.
           </p>
         </header>
 
@@ -242,14 +254,15 @@ await connection.confirmTransaction(
 
               <div>
                 <label className="block text-[11px] uppercase tracking-wide text-stone-500 mb-1">
-                  Goal Amount (USD)
+                  Goal Amount (SOL)
                 </label>
                 <input
                   type="number"
-                  min={1}
+                  min={0.01}
+                  step="0.01"
                   value={goal}
                   onChange={(e) => setGoal(e.target.value)}
-                  placeholder="5000"
+                  placeholder="2.5"
                   className="w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#2D7774]"
                 />
               </div>
