@@ -56,11 +56,9 @@ export default function MobileNav() {
 
             console.log("Connecting to wallet:", selectedWallet.adapter.name);
             
-            // Select the wallet
+            // Select the wallet before explicitly starting the connection flow.
             select(selectedWallet.adapter.name);
-            
-            // Call the adapter's connect method directly to trigger Phantom popup
-            // This ensures the permission prompt appears every time
+
             await selectedWallet.adapter.connect();
             console.log("Wallet connected successfully");
         } catch (error) {
