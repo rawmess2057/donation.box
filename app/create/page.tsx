@@ -105,19 +105,27 @@ export default function CreateCampaignPage() {
         data: Buffer.from(JSON.stringify(payload), "utf-8"),
       });
 
-      const transaction = new Transaction().add(memoIx);
-      const signature = await selectedWallet.adapter.sendTransaction(
-        transaction,
-        connection,
-      );
       const latestBlockhash = await connection.getLatestBlockhash();
-      await connection.confirmTransaction(
-        {
-          signature,
-          ...latestBlockhash,
-        },
-        "confirmed",
-      );
+
+const transaction = new Transaction({
+  feePayer: creator,
+  blockhash: latestBlockhash.blockhash,
+  lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+}).add(memoIx);
+
+const signature = await selectedWallet.adapter.sendTransaction(
+  transaction,
+  connection,
+);
+
+await connection.confirmTransaction(
+  {
+    signature,
+    blockhash: latestBlockhash.blockhash,
+    lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+  },
+  "confirmed",
+);
 
       appendCreatedCampaign({
         id: `user-${Date.now()}`,
