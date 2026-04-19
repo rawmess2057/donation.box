@@ -14,13 +14,12 @@ import {
 
 /**
  * Blink Action: Transaction Confirmation
- * POST /api/actions/donate/confirm?campaignId={id}&amount={amount}
+ * POST /api/actions/donate/confirm?campaignId={id}&amount={amount}&recipient={address}
  *
  * Receives wallet address from client, builds and returns a transaction
  * ready to be signed by the wallet.
  */
 
-const RECIPIENT_ADDRESS = process.env.NEXT_PUBLIC_DONATION_RECIPIENT;
 const NETWORK = process.env.NEXT_PUBLIC_SOLANA_NETWORK || "devnet";
 
 export const POST = async (req: Request) => {
@@ -28,6 +27,7 @@ export const POST = async (req: Request) => {
     const url = new URL(req.url);
     const campaignId = url.searchParams.get("campaignId");
     const amountStr = url.searchParams.get("amount");
+    const recipientParam = url.searchParams.get("recipient");
 
     if (!campaignId || !amountStr) {
       return new Response(
@@ -41,7 +41,10 @@ export const POST = async (req: Request) => {
       );
     }
 
-    if (!RECIPIENT_ADDRESS) {
+    // Use recipient from parameter, or fall back to env variable
+    const recipientAddress = recipientParam || process.env.NEXT_PUBLIC_DONATION_RECIPIENT;
+
+    if (!recipientAddress) {
       return new Response(
         JSON.stringify({
           error: "Recipient address not configured",
@@ -75,7 +78,7 @@ export const POST = async (req: Request) => {
 
     try {
       payer = new PublicKey(payerString);
-      recipient = new PublicKey(RECIPIENT_ADDRESS);
+      recipient = new PublicKey(recipientAddress);
     } catch (err) {
       return new Response(
         JSON.stringify({

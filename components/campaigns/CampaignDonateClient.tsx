@@ -89,13 +89,16 @@ export default function CampaignDonateClient({
     amount: number,
     retryCount: number = 0,
   ): Promise<string> => {
-    if (!recipientAddress) {
+    // Use campaign creator as recipient if available, otherwise use the provided recipientAddress
+    const finalRecipientAddress = campaignCreator || recipientAddress;
+    
+    if (!finalRecipientAddress) {
       throw new Error(
         "Set NEXT_PUBLIC_DONATION_RECIPIENT with a valid Solana wallet address.",
       );
     }
 
-    const recipient = new PublicKey(recipientAddress);
+    const recipient = new PublicKey(finalRecipientAddress);
     const lamports = Math.max(1, Math.round(amount * LAMPORTS_PER_SOL));
 
     // Get latest blockhash BEFORE creating transaction
