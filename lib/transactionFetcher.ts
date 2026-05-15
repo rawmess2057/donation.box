@@ -7,7 +7,8 @@ export type RecentDonation = {
   timestamp: number;
 };
 
-const RPC_ENDPOINT = "https://api.devnet.solana.com";
+const RPC_ENDPOINT =
+  process.env.NEXT_PUBLIC_SOLANA_RPC_URL ?? "https://api.devnet.solana.com";
 const RATE_LIMIT_DELAY = 200; // ms between requests
 const CACHE_DURATION = 30000; // Cache for 30 seconds
 const STORAGE_KEY = "donate_blink_recent_donations";
@@ -17,6 +18,14 @@ let donationCache: {
   data: RecentDonation[];
   timestamp: number;
 } | null = null;
+
+function isRateLimitError(error: unknown): error is { message?: string; code?: number } {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    ("message" in error || "code" in error)
+  );
+}
 
 /**
  * Save donations to localStorage for offline support
@@ -105,7 +114,7 @@ export async function fetchRecentDonations(
         const postBalances = transaction.meta.postBalances || [];
         const preBalances = transaction.meta.preBalances || [];
         const accountKeys = transaction.transaction.message.getAccountKeys();
-        const accounts = accountKeys.data || [];
+        const accounts = accountKeys.keySegments().flat();
 
         if (preBalances.length === 0 || postBalances.length === 0 || accounts.length === 0) {
           continue;
@@ -143,9 +152,13 @@ export async function fetchRecentDonations(
             }
           }
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         // Handle rate limit errors gracefully
-        if (error?.message?.includes("429") || error?.code === 429) {
+        if (
+          isRateLimitError(error) &&
+          ((typeof error.message === "string" && error.message.includes("429")) ||
+            error.code === 429)
+        ) {
           console.warn(`Rate limited. Stopping fetch and using cached data.`);
           // Return cached/stored donations instead of crashing
           const stored = getDonationsFromStorage();
@@ -168,8 +181,13 @@ export async function fetchRecentDonations(
     saveDonationsToStorage(sorted);
 
     return sorted;
-  } catch (error: any) {
-    console.error("Error fetching donations:", error?.message || error);
+  } catch (error: unknown) {
+    console.error(
+      "Error fetching donations:",
+      isRateLimitError(error) && typeof error.message === "string"
+        ? error.message
+        : error,
+    );
     // Return stored donations as fallback
     return getDonationsFromStorage();
   }

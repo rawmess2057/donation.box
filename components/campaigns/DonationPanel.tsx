@@ -6,11 +6,11 @@ import { Info, Share2 } from "lucide-react";
 type DonationPanelProps = {
   raised: number;
   goal: number;
-  currency?: "USDC" | "USD";
+  currency?: "SOL";
   minDonation?: number;
   maxDonation?: number;
   isProcessing?: boolean;
-  onDonate?: (amount: number, currency: "USDC" | "USD") => void;
+  onDonate?: (amount: number, currency: "SOL") => void;
 };
 
 const PRESET_AMOUNTS = [0.1, 0.5, 1, 2];
@@ -25,7 +25,7 @@ function formatMoney(value: number) {
 export default function DonationPanel({
   raised,
   goal,
-  currency = "USDC",
+  currency = "SOL",
   minDonation = 0.01,
   maxDonation = 10,
   isProcessing = false,
@@ -44,8 +44,8 @@ export default function DonationPanel({
 
   const amountError = useMemo(() => {
     if (!Number.isFinite(finalAmount)) return "Enter a valid amount.";
-    if (finalAmount < minDonation) return `Minimum donation is $${minDonation}.`;
-    if (finalAmount > maxDonation) return `Maximum donation is $${maxDonation.toLocaleString()}.`;
+    if (finalAmount < minDonation) return `Minimum donation is ${minDonation} SOL.`;
+    if (finalAmount > maxDonation) return `Maximum donation is ${maxDonation.toLocaleString()} SOL.`;
     return "";
   }, [finalAmount, minDonation, maxDonation]);
 
@@ -69,7 +69,7 @@ export default function DonationPanel({
       return;
     }
     // Fallback while wallet flow is not connected.
-    window.alert(`Proceeding to donate $${formatMoney(finalAmount)} ${currency}`);
+    window.alert(`Proceeding to donate ${formatMoney(finalAmount)} ${currency}`);
   };
 
   return (
@@ -78,12 +78,12 @@ export default function DonationPanel({
         <div>
           <p className="text-xs uppercase tracking-wide text-stone-500">Raised</p>
           <p className="text-2xl font-bold text-[#9A432E]">
-            ${formatMoney(raised)} <span className="text-sm">{currency}</span>
+            {formatMoney(raised)} <span className="text-sm">{currency}</span>
           </p>
         </div>
         <div className="text-right">
           <p className="text-xs uppercase tracking-wide text-stone-500">Goal</p>
-          <p className="text-xl font-semibold text-stone-900">${formatMoney(goal)}</p>
+          <p className="text-xl font-semibold text-stone-900">{formatMoney(goal)} SOL</p>
         </div>
       </div>
 
@@ -91,7 +91,7 @@ export default function DonationPanel({
         <div className="h-2 rounded bg-[#2D7774]" style={{ width: `${progress}%` }} />
       </div>
       <p className="mb-5 text-xs text-stone-600">
-        {progress}% funded · ${formatMoney(remaining)} remaining
+        {progress}% funded · {formatMoney(remaining)} SOL remaining
       </p>
 
       <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-stone-600">
@@ -114,7 +114,7 @@ export default function DonationPanel({
                   : "bg-white text-stone-800 hover:bg-stone-100"
               }`}
             >
-              ${amount}
+              {amount} SOL
             </button>
           );
         })}
@@ -135,7 +135,7 @@ export default function DonationPanel({
         <p className="mb-3 text-xs text-red-600">{amountError}</p>
       ) : (
         <p className="mb-3 text-xs text-stone-500">
-          You are donating ${formatMoney(finalAmount)} {currency}
+          You are donating {formatMoney(finalAmount)} {currency}
         </p>
       )}
 
@@ -145,7 +145,7 @@ export default function DonationPanel({
         className="w-full rounded-xl bg-[#1E6E6B] py-3 font-semibold text-white transition hover:bg-[#185b58] disabled:cursor-not-allowed disabled:opacity-50"
         onClick={handleDonate}
       >
-        {isProcessing ? "Processing..." : `Donate ${isValidAmount ? `$${formatMoney(finalAmount)}` : ""}`}
+        {isProcessing ? "Processing..." : `Donate ${isValidAmount ? `${formatMoney(finalAmount)} SOL` : ""}`}
       </button>
 
       <div className="mt-4 flex items-center justify-between rounded-xl bg-[#DCD9D2] px-3 py-2">

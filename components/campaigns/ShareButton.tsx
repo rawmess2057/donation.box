@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import {
   Share2,
   Copy,
@@ -24,19 +24,10 @@ export default function ShareButton({
   campaignId,
   campaignTitle = "Campaign",
 }: ShareButtonProps) {
-  const [blinkUrl, setBlinkUrl] = useState<string>("");
   const [copied, setCopied] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
   const [showQR, setShowQR] = useState(false);
-
-  useEffect(() => {
-    try {
-      const url = generateBlinkUrl(campaignId);
-      setBlinkUrl(url);
-    } catch (err) {
-      console.error("Error generating Blink URL:", err);
-    }
-  }, [campaignId]);
+  const blinkUrl = useMemo(() => generateBlinkUrl(campaignId), [campaignId]);
 
   const handleCopyBlink = async () => {
     try {

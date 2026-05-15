@@ -1,11 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Flame, TrendingUp, Gift } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Flame, TrendingUp, Gift, Sparkles, Activity } from "lucide-react";
 import FeedItemComponent from "@/components/impact/FeedItemComponent";
-import { getImpactFeedSorted, type FeedItem } from "@/lib/impactFeedStore";
+import type { FeedItem } from "@/lib/campaigns";
 
 type SortOption = "latest" | "trending" | "topDonations";
+
+const SORT_BUTTONS: { key: SortOption; label: string; icon: typeof Flame }[] = [
+  { key: "latest", label: "Latest", icon: Activity },
+  { key: "trending", label: "Trending", icon: Flame },
+  { key: "topDonations", label: "Top Donations", icon: Gift },
+];
 
 export default function ImpactFeedPage() {
   const [feedItems, setFeedItems] = useState<FeedItem[]>([]);
@@ -13,106 +19,126 @@ export default function ImpactFeedPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Load feed items
-    const items = getImpactFeedSorted(sortBy);
-    setFeedItems(items);
-    setIsLoading(false);
+    let active = true;
 
-    // Refresh every 10 seconds to show new donations
-    const interval = setInterval(() => {
-      const updated = getImpactFeedSorted(sortBy);
-      setFeedItems(updated);
-    }, 10000);
+    async function loadFeed() {
+      try {
+        const response = await fetch(`/api/feed?sortBy=${sortBy}`, { cache: "no-store" });
+        const payload = (await response.json()) as { items?: FeedItem[] };
 
-    return () => clearInterval(interval);
+        if (active) {
+          setFeedItems(payload.items ?? []);
+          setIsLoading(false);
+        }
+      } catch {
+        if (active) setIsLoading(false);
+      }
+    }
+
+    void loadFeed();
+    const interval = setInterval(() => void loadFeed(), 10000);
+
+    return () => {
+      active = false;
+      clearInterval(interval);
+    };
   }, [sortBy]);
 
-  const handleLike = () => {
-    // Refresh feed after like
-    const updated = getImpactFeedSorted(sortBy);
-    setFeedItems(updated);
+  const handleLike = async () => {
+    const response = await fetch(`/api/feed?sortBy=${sortBy}`, { cache: "no-store" });
+    const payload = (await response.json()) as { items?: FeedItem[] };
+    setFeedItems(payload.items ?? []);
   };
 
+  // Stats
+  const totalDonations = feedItems.filter((i) => i.type === "donation").length;
+  const totalUpdates = feedItems.filter((i) => i.type === "update").length;
+  const totalSolfunded = feedItems
+    .filter((i) => i.type === "donation")
+    .reduce((sum, i) => sum + (i.donationAmount || 0), 0);
+
   return (
-    <main className="min-h-screen bg-gradient-to-br from-[#FFF9F0] via-[#FFF5E6] to-[#FFF9F0]">
+    <main className="min-h-screen bg-[#FFF9F0]">
       {/* Header */}
-      <div className=" bg-[#fcf9f1]/80 border-b border-stone-200 sticky top-3 z-40">
-        <div className="max-w-4xl mx-auto px-4 py-2">
-          <h1 className="text-3xl font-bold text-[#1C1C17] mb-1">
-            Live Impact Feed
-          </h1>
-          <p className="text-sm text-stone-600">
-            Real-time updates from campaigns making a difference
+      <div className="bg-white border-b border-stone-200 shadow-sm">
+        <div className="max-w-4xl mx-auto px-4 pt-24 pb-4">
+          <div className="flex items-center gap-2 mb-1">
+            <Sparkles size={20} className="text-[#97422F]" />
+            <h1 className="text-2xl md:text-3xl font-bold text-stone-900">
+              Live Impact Feed
+            </h1>
+          </div>
+          <p className="text-sm text-stone-500">
+            Real-time updates, donations, and milestones from campaigns making a difference
           </p>
 
-          {/* Sorting Options */}
-          <div className="mt-2 flex flex-wrap gap-2">
-            <button
-              onClick={() => setSortBy("latest")}
-              className={`px-3 py-1 text-sm rounded-full font-semibold transition ${
-                sortBy === "latest"
-                  ? "bg-[#97422F] text-white"
-                  : "bg-stone-100 text-stone-700 hover:bg-stone-200"
-              }`}
-            >
-              Latest
-            </button>
-            <button
-              onClick={() => setSortBy("trending")}
-              className={`px-3 py-1 text-sm rounded-full font-semibold flex items-center gap-2 transition ${
-                sortBy === "trending"
-                  ? "bg-[#97422F] text-white"
-                  : "bg-stone-100 text-stone-700 hover:bg-stone-200"
-              }`}
-            >
-              <Flame size={14} />
-              Trending
-            </button>
-            <button
-              onClick={() => setSortBy("topDonations")}
-              className={`px-3 py-1 text-sm rounded-full font-semibold flex items-center gap-2 transition ${
-                sortBy === "topDonations"
-                  ? "bg-[#97422F] text-white"
-                  : "bg-stone-100 text-stone-700 hover:bg-stone-200"
-              }`}
-            >
-              <Gift size={14} />
-              Top Donations
-            </button>
+          {/* Stats row */}
+          <div className="mt-4 grid grid-cols-3 gap-3">
+            <div className="bg-emerald-50 rounded-xl px-3 py-2.5 text-center">
+              <p className="text-lg font-bold text-emerald-700">{totalDonations}</p>
+              <p className="text-[10px] uppercase tracking-wider text-emerald-600 font-semibold">
+                Donations
+              </p>
+            </div>
+            <div className="bg-blue-50 rounded-xl px-3 py-2.5 text-center">
+              <p className="text-lg font-bold text-blue-700">{totalUpdates}</p>
+              <p className="text-[10px] uppercase tracking-wider text-blue-600 font-semibold">
+                Updates
+              </p>
+            </div>
+            <div className="bg-amber-50 rounded-xl px-3 py-2.5 text-center">
+              <p className="text-lg font-bold text-amber-700">
+                {totalSolfunded.toFixed(1)} SOL
+              </p>
+              <p className="text-[10px] uppercase tracking-wider text-amber-600 font-semibold">
+                Donated
+              </p>
+            </div>
+          </div>
+
+          {/* Sort tabs */}
+          <div className="mt-4 flex gap-2">
+            {SORT_BUTTONS.map(({ key, label, icon: Icon }) => (
+              <button
+                key={key}
+                onClick={() => setSortBy(key)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-full font-semibold transition-all duration-200 ${
+                  sortBy === key
+                    ? "bg-[#97422F] text-white shadow-md shadow-orange-200/50"
+                    : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+                }`}
+              >
+                <Icon size={14} />
+                {label}
+              </button>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Feed */}
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      {/* Feed content */}
+      <div className="max-w-4xl mx-auto px-4 py-6">
         {isLoading ? (
-          <div className="text-center py-12">
-            <div className="inline-block animate-spin">
-              <div className="w-12 h-12 border-4 border-stone-200 border-t-[#97422F] rounded-full" />
+          <div className="text-center py-16">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-stone-100 mb-4">
+              <div className="w-6 h-6 border-[3px] border-stone-200 border-t-[#97422F] rounded-full animate-spin" />
             </div>
-            <p className="text-stone-600 mt-4">Loading impact feed...</p>
+            <p className="text-stone-600 text-sm font-medium">Loading impact feed...</p>
           </div>
         ) : feedItems.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <TrendingUp size={32} className="text-stone-400" />
+          <div className="text-center py-16">
+            <div className="w-16 h-16 bg-stone-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <TrendingUp size={28} className="text-stone-400" />
             </div>
-            <h2 className="text-2xl font-bold text-stone-900 mb-2">
-              No updates yet
-            </h2>
-            <p className="text-stone-600 max-w-md mx-auto">
-              Be the first to create a campaign and share your impact with the
-              world!
+            <h2 className="text-xl font-bold text-stone-900 mb-1">No updates yet</h2>
+            <p className="text-sm text-stone-500 max-w-sm mx-auto">
+              Be the first to create a campaign and share your impact with the world!
             </p>
           </div>
         ) : (
           <div className="space-y-4">
-            {feedItems.map((item) => (
-              <FeedItemComponent
-                key={item.id}
-                item={item}
-                onLike={handleLike}
-              />
+            {feedItems.map((item, i) => (
+              <FeedItemComponent key={item.id} item={item} index={i} onLike={handleLike} />
             ))}
           </div>
         )}
