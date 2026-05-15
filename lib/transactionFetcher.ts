@@ -7,7 +7,8 @@ export type RecentDonation = {
   timestamp: number;
 };
 
-const RPC_ENDPOINT = "https://api.devnet.solana.com";
+const RPC_ENDPOINT =
+  process.env.NEXT_PUBLIC_SOLANA_RPC_URL ?? "https://api.devnet.solana.com";
 const RATE_LIMIT_DELAY = 200; // ms between requests
 const CACHE_DURATION = 30000; // Cache for 30 seconds
 const STORAGE_KEY = "donate_blink_recent_donations";

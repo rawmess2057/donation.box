@@ -2,6 +2,7 @@
 
 import { Share2, Home, X } from "lucide-react";
 import { useMemo } from "react";
+import { getExplorerTxUrl } from "@/lib/explorer";
 
 type DonationSuccessScreenProps = {
   donorName?: string;
@@ -92,7 +93,7 @@ export default function DonationSuccessScreen({
                   <div className="flex justify-between items-center text-sm">
                     <span className="font-semibold text-[#55423E]">Transaction Hash</span>
                     <a
-                      href={`https://explorer.solana.com/tx/${txSignature}?cluster=devnet`}
+                      href={getExplorerTxUrl(txSignature)}
                       target="_blank"
                       rel="noreferrer"
                       className="text-[#266866] font-bold hover:underline text-xs"

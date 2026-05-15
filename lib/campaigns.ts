@@ -39,7 +39,7 @@ export type CampaignRecord = {
   updates: CampaignUpdate[];
 };
 
-export type FeedItemType = "donation" | "update";
+export type FeedItemType = "donation" | "update" | "milestone" | "cnft";
 
 export type FeedItem = {
   id: string;
@@ -54,6 +54,8 @@ export type FeedItem = {
   content?: string;
   image?: string;
   video?: string;
+  milestone?: string;
+  cNFTMintId?: string;
   likes: number;
   comments: number;
 };
@@ -67,26 +69,77 @@ export function createId(prefix: string) {
   return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 }
 
+/**
+ * Sort campaigns by trending score.
+ * Trending considers:
+ *   - Number of recent donations (weighted by recency)
+ *   - Total raised so far
+ *   - Progress percentage (momentum)
+ *   - Number of campaign updates
+ */
+export function sortCampaignsByTrending(campaigns: CampaignRecord[]): CampaignRecord[] {
+  const now = Date.now();
+  const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+
+  return [...campaigns].sort((a, b) => {
+    const scoreA = calculateTrendingScore(a, now, SEVEN_DAYS_MS);
+    const scoreB = calculateTrendingScore(b, now, SEVEN_DAYS_MS);
+    return scoreB - scoreA;
+  });
+}
+
+function calculateTrendingScore(
+  campaign: CampaignRecord,
+  now: number,
+  windowMs: number,
+): number {
+  let score = 0;
+
+  // Raised amount (weighted heavily — money raised signals trust)
+  score += campaign.raised * 10;
+
+  // Progress momentum (% funded, capped at 100%)
+  score += campaign.progress * 2;
+
+  // Recent donation activity — each donation in the last 7 days counts
+  const recentDonations = campaign.donations.filter(
+    (d) => now - d.timestamp < windowMs,
+  );
+  score += recentDonations.length * 15;
+
+  // Recency bonus — donations within last 24 hours get extra weight
+  const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+  const veryRecentDonations = recentDonations.filter(
+    (d) => now - d.timestamp < ONE_DAY_MS,
+  );
+  score += veryRecentDonations.length * 25;
+
+  // Updates show engagement
+  score += campaign.updates.length * 10;
+
+  // Total unique donors (spread matters)
+  score += new Set(campaign.donations.map((d) => d.donor)).size * 5;
+
+  // Age bonus — newer campaigns get a small boost to help them surface
+  const ageMs = now - new Date(campaign.createdAt).getTime();
+  if (ageMs < windowMs) {
+    score += 10; // Boost campaigns created in the last week
+  }
+
+  return score;
+}
+
+/**
+ * Sort campaigns by latest (newest first).
+ */
+export function sortCampaignsByLatest(campaigns: CampaignRecord[]): CampaignRecord[] {
+  return [...campaigns].sort(
+    (a, b) =>
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
+}
+
 export const MOCK_CAMPAIGNS: CampaignRecord[] = [
-  {
-    id: "1",
-    title: "Help rebuild classrooms destroyed by landslide",
-    subtitle: "Support safer learning spaces for students in Sindhupalchok.",
-    category: "Education",
-    story:
-      "Community volunteers are rebuilding damaged classrooms and replacing basic materials so children can return to school quickly.",
-    image: "/school.png",
-    goal: 8,
-    raised: 3.2,
-    progress: calculateProgress(3.2, 8),
-    currency: "SOL",
-    creator: "",
-    txSignature: "mock-campaign-1",
-    createdAt: "2026-04-01T00:00:00.000Z",
-    verified: true,
-    donations: [],
-    updates: [],
-  },
   {
     id: "2",
     title: "Landslide Relief - Gorkha District",
@@ -101,9 +154,66 @@ export const MOCK_CAMPAIGNS: CampaignRecord[] = [
     currency: "SOL",
     creator: "",
     txSignature: "mock-campaign-2",
-    createdAt: "2026-04-02T00:00:00.000Z",
+    createdAt: "2026-04-05T00:00:00.000Z",
     verified: true,
-    donations: [],
+    donations: [
+      {
+        id: "d1",
+        donor: "DonorA",
+        amount: 2.0,
+        signature: "sig-d1",
+        timestamp: Date.now() - 2 * 60 * 60 * 1000, // 2 hours ago
+        likes: 3,
+        comments: 1,
+      },
+      {
+        id: "d2",
+        donor: "DonorB",
+        amount: 1.5,
+        signature: "sig-d2",
+        timestamp: Date.now() - 12 * 60 * 60 * 1000, // 12 hours ago
+        likes: 1,
+        comments: 0,
+      },
+    ],
+    updates: [
+      {
+        id: "u1",
+        content:
+          "We've distributed emergency kits to 45 families this week. Thank you for your support!",
+        timestamp: Date.now() - 24 * 60 * 60 * 1000,
+        likes: 8,
+        comments: 2,
+      },
+    ],
+  },
+  {
+    id: "1",
+    title: "Help rebuild classrooms destroyed by landslide",
+    subtitle: "Support safer learning spaces for students in Sindhupalchok.",
+    category: "Education",
+    story:
+      "Community volunteers are rebuilding damaged classrooms and replacing basic materials so children can return to school quickly.",
+    image: "/school.png",
+    goal: 8,
+    raised: 3.2,
+    progress: calculateProgress(3.2, 8),
+    currency: "SOL",
+    creator: "",
+    txSignature: "mock-campaign-1",
+    createdAt: "2026-04-10T00:00:00.000Z",
+    verified: true,
+    donations: [
+      {
+        id: "d3",
+        donor: "DonorC",
+        amount: 0.8,
+        signature: "sig-d3",
+        timestamp: Date.now() - 6 * 60 * 60 * 1000, // 6 hours ago
+        likes: 2,
+        comments: 0,
+      },
+    ],
     updates: [],
   },
   {
