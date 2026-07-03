@@ -8,11 +8,10 @@ import { PublicKey, Transaction, TransactionInstruction } from "@solana/web3.js"
 import { Buffer } from "buffer";
 import { createId } from "@/lib/campaigns";
 import { getNetworkLabel, getCreateActionLabel } from "@/lib/explorer";
+import PartnerGuard from "@/components/PartnerGuard";
 
 const CATEGORIES = ["Education", "Emergency", "Nutrition", "Health", "Environment"];
-const MEMO_PROGRAM_ID = new PublicKey(
-  "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
-);
+const MEMO_PROGRAM_ID = new PublicKey("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr");
 
 export default function CreateCampaignPage() {
   const router = useRouter();
@@ -28,6 +27,7 @@ export default function CreateCampaignPage() {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [goal, setGoal] = useState("");
+  const [impactDescription, setImpactDescription] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -35,13 +35,11 @@ export default function CreateCampaignPage() {
   const sanitizedGoal = useMemo(() => Number(goal), [goal]);
 
   const handleFileSelect = (file: File) => {
-    // Validate file type
     const allowed = ["image/jpeg", "image/png", "image/webp", "image/gif"];
     if (!allowed.includes(file.type)) {
       setError("Invalid file type. Use PNG, JPEG, WebP or GIF.");
       return;
     }
-    // Validate file size (5 MB)
     if (file.size > 5 * 1024 * 1024) {
       setError("File too large. Maximum size is 5 MB.");
       return;
@@ -67,8 +65,7 @@ export default function CreateCampaignPage() {
         readyStates.has(walletOption.readyState),
     );
 
-    const selected =
-      wallet?.adapter.name === "Phantom" ? wallet : (phantom ?? null);
+    const selected = wallet?.adapter.name === "Phantom" ? wallet : (phantom ?? null);
 
     if (selected) {
       select(selected.adapter.name);
@@ -93,13 +90,10 @@ export default function CreateCampaignPage() {
 
     const selectedWallet = selectPhantomWallet();
     if (!selectedWallet) {
-      setError(
-        "Phantom wallet not detected. In Brave, disable Brave Wallet in settings, then refresh and try again.",
-      );
+      setError("Phantom wallet not detected. In Brave, disable Brave Wallet in settings, then refresh and try again.");
       return;
     }
 
-    // Upload image file first if in file mode
     let finalImage = image.trim();
     if (uploadMode === "file" && imageFile && imagePreview) {
       setIsUploading(true);
@@ -107,10 +101,7 @@ export default function CreateCampaignPage() {
       try {
         const uploadForm = new FormData();
         uploadForm.append("file", imageFile);
-        const uploadRes = await fetch("/api/upload", {
-          method: "POST",
-          body: uploadForm,
-        });
+        const uploadRes = await fetch("/api/upload", { method: "POST", body: uploadForm });
         if (!uploadRes.ok) {
           const err = (await uploadRes.json()) as { error?: string };
           throw new Error(err.error ?? "Failed to upload image");
@@ -118,10 +109,7 @@ export default function CreateCampaignPage() {
         const { url } = (await uploadRes.json()) as { url: string };
         finalImage = url;
       } catch (uploadError) {
-        const msg =
-          uploadError instanceof Error
-            ? uploadError.message
-            : "Failed to upload image.";
+        const msg = uploadError instanceof Error ? uploadError.message : "Failed to upload image.";
         setError(msg);
         setIsUploading(false);
         return;
@@ -172,10 +160,7 @@ export default function CreateCampaignPage() {
         lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
       }).add(memoIx);
 
-      const signature = await selectedWallet.adapter.sendTransaction(
-        transaction,
-        connection,
-      );
+      const signature = await selectedWallet.adapter.sendTransaction(transaction, connection);
 
       await connection.confirmTransaction(
         {
@@ -189,9 +174,7 @@ export default function CreateCampaignPage() {
       const campaignId = createId("campaign");
       const response = await fetch("/api/campaigns", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           id: campaignId,
           title: title.trim(),
@@ -206,6 +189,7 @@ export default function CreateCampaignPage() {
           txSignature: signature,
           createdAt: new Date().toISOString(),
           verified: false,
+          impactDescription: impactDescription.trim() || undefined,
         }),
       });
 
@@ -213,13 +197,10 @@ export default function CreateCampaignPage() {
         throw new Error(`Campaign was created on ${getNetworkLabel()}, but saving it in the app failed.`);
       }
 
-      setStatus(`Campaign created on ${getNetworkLabel()}. Redirecting to campaign...`);
+      setStatus(`Campaign created on ${getNetworkLabel()}. Redirecting...`);
       router.push(`/campaign/${campaignId}`);
     } catch (createError) {
-      const message =
-        createError instanceof Error
-          ? createError.message
-          : `Failed to create campaign on ${getNetworkLabel()}.`;
+      const message = createError instanceof Error ? createError.message : `Failed to create campaign on ${getNetworkLabel()}.`;
       if (/rejected|declined|denied/i.test(message)) {
         setError("Wallet transaction was cancelled.");
       } else {
@@ -231,236 +212,211 @@ export default function CreateCampaignPage() {
   };
 
   return (
-    <main className="bg-[#F7F3EC] min-h-screen py-14 pt-28 px-4">
-      <section className="max-w-xl mx-auto">
-        <header className="text-center mb-8">
-          <h1 className="text-5xl font-serif font-bold text-[#9A432E]">
-            Launch a Story
-          </h1>
-          <p className="mt-3 text-sm text-stone-600">
-            Create a real campaign record backed by Solana ${getNetworkLabel()} and publish it for shared testing.
-          </p>
-        </header>
+    <PartnerGuard>
+      <main className="bg-bg-muted min-h-screen py-14 pt-28 px-4">
+        <section className="max-w-xl mx-auto">
+          <header className="text-center mb-8">
+            <h1 className="text-5xl font-bold text-fg font-[family-name:var(--font-heading)]">
+              Launch a Story
+            </h1>
+            <p className="mt-3 text-sm text-fg-muted">
+              Create a real campaign record backed by Solana {getNetworkLabel()} and publish it for shared testing.
+            </p>
+          </header>
 
-        <form className="space-y-5" onSubmit={handleCreateCampaign}>
-          <div className="rounded-2xl bg-[#F2EEE7] p-5">
-            <h2 className="text-base font-semibold text-[#245B5B] mb-4">
-              Campaign Identity
-            </h2>
+          <form className="space-y-5" onSubmit={handleCreateCampaign}>
+            <div className="rounded-2xl glass-card p-5">
+              <h2 className="text-base font-semibold text-fg mb-4 font-[family-name:var(--font-heading)]">
+                Campaign Identity
+              </h2>
 
-            <div className="space-y-4">
-              <div>
-                <label className="block text-[11px] uppercase tracking-wide text-stone-500 mb-1">
-                  Campaign Title
-                </label>
-                <input
-                  type="text"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="e.g. Classroom Supplies for Gorkha"
-                  className="w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#2D7774]"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] uppercase tracking-wide text-stone-500 mb-1">
-                  Focus Area
-                </label>
-                <select
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#2D7774]"
-                >
-                  {CATEGORIES.map((item) => (
-                    <option key={item}>{item}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-[11px] uppercase tracking-wide text-stone-500 mb-1">
-                  The Story
-                </label>
-                <textarea
-                  rows={4}
-                  value={story}
-                  onChange={(e) => setStory(e.target.value)}
-                  placeholder="Explain the impact of this campaign in 2-3 sentences."
-                  className="w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#2D7774]"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-2xl bg-[#F2EEE7] p-5">
-            <h2 className="text-base font-semibold text-[#245B5B] mb-4">
-              Visuals & Goal
-            </h2>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-[11px] uppercase tracking-wide text-stone-500 mb-1">
-                  Featured Image
-                </label>
-
-                {/* Mode toggle */}
-                <div className="flex gap-2 mb-3">
-                  <button
-                    type="button"
-                    onClick={() => setUploadMode("url")}
-                    className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
-                      uploadMode === "url"
-                        ? "bg-[#2D7774] text-white"
-                        : "bg-white text-stone-600 hover:bg-stone-100"
-                    }`}
-                  >
-                    URL
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setUploadMode("file")}
-                    className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
-                      uploadMode === "file"
-                        ? "bg-[#2D7774] text-white"
-                        : "bg-white text-stone-600 hover:bg-stone-100"
-                    }`}
-                  >
-                    Upload from device
-                  </button>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-[11px] uppercase tracking-wide text-fg-subtle mb-1">
+                    Campaign Title
+                  </label>
+                  <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="e.g. Classroom Supplies for Gorkha"
+                    className="w-full rounded-xl border border-border bg-bg px-3 py-2.5 text-sm outline-none transition-colors focus:border-border-focus focus:ring-2 focus:ring-border-focus/20 text-fg placeholder:text-fg-subtle"
+                  />
                 </div>
 
-                {uploadMode === "url" ? (
-                  <input
-                    type="url"
-                    value={image}
-                    onChange={(e) => setImage(e.target.value)}
-                    placeholder="https://example.com/image.jpg (optional)"
-                    className="w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#2D7774]"
-                  />
-                ) : (
-                  <div
-                    onClick={() => fileInputRef.current?.click()}
-                    onDragOver={(e) => {
-                      e.preventDefault();
-                      e.currentTarget.classList.add("border-[#2D7774]");
-                    }}
-                    onDragLeave={(e) => {
-                      e.currentTarget.classList.remove("border-[#2D7774]");
-                    }}
-                    onDrop={(e) => {
-                      e.preventDefault();
-                      e.currentTarget.classList.remove("border-[#2D7774]");
-                      const file = e.dataTransfer.files[0];
-                      if (file) handleFileSelect(file);
-                    }}
-                    className="relative flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-stone-300 bg-white px-4 py-6 text-center transition hover:border-stone-400"
+                <div>
+                  <label className="block text-[11px] uppercase tracking-wide text-fg-subtle mb-1">
+                    Focus Area
+                  </label>
+                  <select
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    className="w-full rounded-xl border border-border bg-bg px-3 py-2.5 text-sm outline-none transition-colors focus:border-border-focus focus:ring-2 focus:ring-border-focus/20 text-fg"
                   >
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp,image/gif"
-                      className="hidden"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) handleFileSelect(file);
-                      }}
-                    />
+                    {CATEGORIES.map((item) => (
+                      <option key={item}>{item}</option>
+                    ))}
+                  </select>
+                </div>
 
-                    {imagePreview ? (
-                      <div className="relative w-full">
-                        <img
-                          src={imagePreview}
-                          alt="Preview"
-                          className="mx-auto max-h-48 rounded-lg object-contain"
-                        />
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setImageFile(null);
-                            setImagePreview(null);
-                            if (fileInputRef.current)
-                              fileInputRef.current.value = "";
-                          }}
-                          className="absolute top-1 right-1 rounded-full bg-red-500 p-1 text-white hover:bg-red-600"
-                        >
-                          <svg
-                            className="h-4 w-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth={2}
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M6 18L18 6M6 6l12 12"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    ) : (
-                      <>
-                        <svg
-                          className="mb-2 h-8 w-8 text-stone-400"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={1.5}
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
-                          />
-                        </svg>
-                        <p className="text-sm font-medium text-stone-600">
-                          Click to upload or drag & drop
-                        </p>
-                        <p className="mt-1 text-xs text-stone-400">
-                          PNG, JPEG, WebP or GIF (max 5 MB)
-                        </p>
-                      </>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-[11px] uppercase tracking-wide text-stone-500 mb-1">
-                  Goal Amount (SOL)
-                </label>
-                <input
-                  type="number"
-                  min={0.01}
-                  step="0.01"
-                  value={goal}
-                  onChange={(e) => setGoal(e.target.value)}
-                  placeholder="2.5"
-                  className="w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#2D7774]"
-                />
+                <div>
+                  <label className="block text-[11px] uppercase tracking-wide text-fg-subtle mb-1">
+                    The Story
+                  </label>
+                  <textarea
+                    rows={4}
+                    value={story}
+                    onChange={(e) => setStory(e.target.value)}
+                    placeholder="Explain the impact of this campaign in 2-3 sentences."
+                    className="w-full rounded-xl border border-border bg-bg px-3 py-2.5 text-sm outline-none transition-colors focus:border-border-focus focus:ring-2 focus:ring-border-focus/20 text-fg placeholder:text-fg-subtle resize-none"
+                  />
+                </div>
               </div>
             </div>
-          </div>
 
-          {error && (
-            <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
-          )}
-          {status && (
-            <p className="rounded-lg bg-teal-50 px-3 py-2 text-sm text-teal-800">
-              {status}
-            </p>
-          )}
+            <div className="rounded-2xl glass-card p-5">
+              <h2 className="text-base font-semibold text-fg mb-4 font-[family-name:var(--font-heading)]">
+                Visuals & Goal
+              </h2>
 
-          <button
-            type="submit"
-            disabled={isSubmitting || isUploading}
-            className="w-full rounded-xl bg-[#2D7774] text-white font-semibold py-3 hover:bg-[#245f5d] transition disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {isSubmitting ? getCreateActionLabel() : `Create Campaign on ${getNetworkLabel()}`}
-          </button>
-        </form>
-      </section>
-    </main>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-[11px] uppercase tracking-wide text-fg-subtle mb-1">
+                    Featured Image
+                  </label>
+
+                  <div className="flex gap-2 mb-3">
+                    <button
+                      type="button"
+                      onClick={() => setUploadMode("url")}
+                      className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+                        uploadMode === "url"
+                          ? "bg-accent text-white"
+                          : "bg-bg text-fg-muted border border-border hover:bg-bg-muted"
+                      }`}
+                    >
+                      URL
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setUploadMode("file")}
+                      className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+                        uploadMode === "file"
+                          ? "bg-accent text-white"
+                          : "bg-bg text-fg-muted border border-border hover:bg-bg-muted"
+                      }`}
+                    >
+                      Upload from device
+                    </button>
+                  </div>
+
+                  {uploadMode === "url" ? (
+                    <input
+                      type="url"
+                      value={image}
+                      onChange={(e) => setImage(e.target.value)}
+                      placeholder="https://example.com/image.jpg (optional)"
+                      className="w-full rounded-xl border border-border bg-bg px-3 py-2.5 text-sm outline-none transition-colors focus:border-border-focus focus:ring-2 focus:ring-border-focus/20 text-fg placeholder:text-fg-subtle"
+                    />
+                  ) : (
+                    <div
+                      onClick={() => fileInputRef.current?.click()}
+                      onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add("border-accent"); }}
+                      onDragLeave={(e) => { e.currentTarget.classList.remove("border-accent"); }}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        e.currentTarget.classList.remove("border-accent");
+                        const file = e.dataTransfer.files[0];
+                        if (file) handleFileSelect(file);
+                      }}
+                      className="relative flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-border bg-bg px-4 py-6 text-center transition hover:border-accent"
+                    >
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,image/gif"
+                        className="hidden"
+                        onChange={(e) => { const file = e.target.files?.[0]; if (file) handleFileSelect(file); }}
+                      />
+
+                      {imagePreview ? (
+                        <div className="relative w-full">
+                          <img src={imagePreview} alt="Preview" className="mx-auto max-h-48 rounded-lg object-contain" />
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setImageFile(null);
+                              setImagePreview(null);
+                              if (fileInputRef.current) fileInputRef.current.value = "";
+                            }}
+                            className="absolute top-1 right-1 rounded-full bg-red-500 p-1 text-white hover:bg-red-600"
+                          >
+                            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        </div>
+                      ) : (
+                        <>
+                          <svg className="mb-2 h-8 w-8 text-fg-subtle" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                          </svg>
+                          <p className="text-sm font-medium text-fg-muted">Click to upload or drag & drop</p>
+                          <p className="mt-1 text-xs text-fg-subtle">PNG, JPEG, WebP or GIF (max 5 MB)</p>
+                        </>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-[11px] uppercase tracking-wide text-fg-subtle mb-1">
+                    What does 1 SOL provide? <span className="text-fg-subtle font-normal normal-case">(optional)</span>
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={impactDescription}
+                    onChange={(e) => setImpactDescription(e.target.value)}
+                    placeholder="e.g. school supplies for 20 children, or 3 emergency kits"
+                    className="w-full rounded-xl border border-border bg-bg px-3 py-2.5 text-sm outline-none transition-colors focus:border-border-focus focus:ring-2 focus:ring-border-focus/20 text-fg placeholder:text-fg-subtle resize-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] uppercase tracking-wide text-fg-subtle mb-1">
+                    Goal Amount (SOL)
+                  </label>
+                  <input
+                    type="number"
+                    min={0.01}
+                    step="0.01"
+                    value={goal}
+                    onChange={(e) => setGoal(e.target.value)}
+                    placeholder="2.5"
+                    className="w-full rounded-xl border border-border bg-bg px-3 py-2.5 text-sm outline-none transition-colors focus:border-border-focus focus:ring-2 focus:ring-border-focus/20 text-fg placeholder:text-fg-subtle"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {error && (
+              <p className="rounded-lg bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 px-3 py-2 text-sm text-red-700 dark:text-red-400">{error}</p>
+            )}
+            {status && (
+              <p className="rounded-lg bg-accent-soft border border-accent/30 px-3 py-2 text-sm text-accent">{status}</p>
+            )}
+
+            <button
+              type="submit"
+              disabled={isSubmitting || isUploading}
+              className="w-full rounded-xl bg-accent hover:bg-accent-hover text-white font-bold py-3.5 transition disabled:cursor-not-allowed disabled:opacity-60 shadow-md"
+            >
+              {isSubmitting ? getCreateActionLabel() : `Create Campaign on ${getNetworkLabel()}`}
+            </button>
+          </form>
+        </section>
+      </main>
+    </PartnerGuard>
   );
 }

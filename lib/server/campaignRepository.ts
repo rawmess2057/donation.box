@@ -71,6 +71,7 @@ export async function createCampaign(
   const stored = await getStoredCampaigns();
   const record: CampaignRecord = {
     ...campaign,
+    impactDescription: campaign.impactDescription || undefined,
     progress: calculateProgress(campaign.raised, campaign.goal),
     donations: [],
     updates: [],

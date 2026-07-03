@@ -19,7 +19,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@solana/actions": ["./node_modules/@solana/actions/src/index"]
     }
   },
   "include": [
