@@ -57,7 +57,7 @@ export default function ExplorePage() {
 
   return (
     <main className="min-h-screen bg-bg">
-      <div className="max-w-7xl mx-auto px-4 pt-28 pb-10">
+      <div className="max-w-7xl mx-auto px-4 pt-10 pb-10">
         <motion.div variants={fadeInUp} initial="hidden" animate="visible" className="mb-2">
           <h1 className="text-4xl md:text-5xl font-bold text-fg font-[family-name:var(--font-heading)]">
             Explore Campaigns
@@ -77,8 +77,8 @@ export default function ExplorePage() {
             onClick={() => setActiveCategory(null)}
             className={`snap-start shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wide transition-all duration-200 ${
               !activeCategory
-                ? "bg-primary text-white shadow-md"
-                : "glass text-fg-muted hover:text-fg"
+                ? "bg-primary/20 backdrop-blur-xl border border-primary/40 text-primary shadow-[0_0_10px_rgba(127,191,127,0.15)]"
+                : "bg-white/5 backdrop-blur-xl border border-white/10 text-fg-muted hover:text-fg"
             }`}
           >
             All
@@ -90,8 +90,8 @@ export default function ExplorePage() {
               onClick={() => setActiveCategory(category)}
               className={`snap-start shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wide transition-all duration-200 ${
                 activeCategory === category
-                  ? "bg-primary text-white shadow-md"
-                  : "glass text-fg-muted hover:text-fg"
+                  ? "bg-primary/20 backdrop-blur-xl border border-primary/40 text-primary shadow-[0_0_10px_rgba(127,191,127,0.15)]"
+                  : "bg-white/5 backdrop-blur-xl border border-white/10 text-fg-muted hover:text-fg"
               }`}
             >
               {CATEGORY_EMOJI[category] ?? ""} {category}
@@ -101,7 +101,7 @@ export default function ExplorePage() {
 
         {isLoading ? (
           <div className="py-20 text-center">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full glass mb-4">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full glass-surface mb-4">
               <div className="w-6 h-6 border-[3px] border-border border-t-primary rounded-full animate-spin" />
             </div>
             <p className="text-fg-muted text-sm">Loading campaigns...</p>

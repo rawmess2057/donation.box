@@ -11,8 +11,8 @@ export default function DashboardPage() {
   if (!publicKey) {
     return (
       <main className="min-h-screen bg-bg">
-        <div className="max-w-4xl mx-auto px-4 pt-28 pb-10 text-center">
-          <div className="w-16 h-16 glass rounded-2xl flex items-center justify-center mx-auto mb-6">
+        <div className="max-w-4xl mx-auto px-4 pt-10 pb-10 text-center">
+          <div className="w-16 h-16 glass-surface rounded-2xl flex items-center justify-center mx-auto mb-6">
             <Wallet size={28} className="text-fg-subtle" />
           </div>
 
@@ -23,7 +23,7 @@ export default function DashboardPage() {
             Connect your Solana wallet to manage your campaigns, track donations, and share impact updates.
           </p>
 
-          <div className="glass-card rounded-2xl p-8 max-w-sm mx-auto">
+          <div className="glass-surface rounded-2xl p-8 max-w-sm mx-auto">
             <div className="w-12 h-12 rounded-full bg-primary-soft flex items-center justify-center mx-auto mb-3">
               <Wallet size={22} className="text-primary" />
             </div>

@@ -90,7 +90,7 @@ export default function Modal({
             aria-modal="true"
             aria-label={title}
             className={`
-              relative w-full max-w-lg glass-card rounded-2xl shadow-xl overflow-hidden
+              relative w-full max-w-lg glass-surface rounded-2xl shadow-xl overflow-hidden
               ${className}
             `}
             initial={{ opacity: 0, scale: 0.95, y: 20 }}

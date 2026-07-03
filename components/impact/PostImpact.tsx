@@ -68,7 +68,7 @@ export default function PostImpact({
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="w-full bg-primary hover:bg-primary-hover text-white font-bold py-3 px-4 rounded-2xl transition-all shadow-md"
+          className="w-full bg-white/[0.04] backdrop-blur-2xl border border-white/20 text-white font-bold py-3 px-4 rounded-2xl transition-all duration-500 ease-out shadow-[0_0_15px_rgba(127,191,127,0.15)] hover:shadow-[0_0_40px_rgba(127,191,127,0.3)] hover:border-primary/50 hover:bg-primary/15"
         >
           Share Impact Update
         </button>
@@ -157,7 +157,7 @@ export default function PostImpact({
                 <button
                   onClick={handlePost}
                   disabled={isPosting || !content.trim()}
-                  className="flex-1 bg-primary text-white font-semibold py-2 px-4 rounded-xl hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center justify-center gap-2"
+                  className="flex-1 bg-white/[0.04] backdrop-blur-2xl border border-white/20 text-white font-semibold py-2 px-4 rounded-xl transition-all duration-500 ease-out disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(127,191,127,0.15)] hover:shadow-[0_0_40px_rgba(127,191,127,0.3)] hover:border-primary/50 hover:bg-primary/15"
                 >
                   {isPosting && <Loader size={16} className="animate-spin" />}
                   {isPosting ? "Posting..." : "Share Impact Update"}

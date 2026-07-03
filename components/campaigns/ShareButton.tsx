@@ -44,7 +44,7 @@ export default function ShareButton({
     <div className="relative">
       <button
         onClick={() => setShowOptions(!showOptions)}
-        className="flex items-center gap-2 rounded-xl bg-accent hover:bg-accent-hover px-4 py-2.5 font-semibold text-white transition-all active:scale-95 shadow-md"
+        className="flex items-center gap-2 rounded-xl bg-white/[0.04] backdrop-blur-2xl border border-white/20 text-accent px-4 py-2.5 font-semibold transition-all duration-500 ease-out active:scale-95 shadow-[0_0_15px_rgba(3,225,255,0.1)] hover:shadow-[0_0_40px_rgba(3,225,255,0.25)] hover:border-accent/50 hover:text-white hover:bg-accent/15"
         title="Share this campaign"
       >
         <Share2 size={18} />

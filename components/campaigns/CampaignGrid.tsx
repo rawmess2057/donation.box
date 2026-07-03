@@ -53,7 +53,7 @@ export default function CampaignGrid({ title = "Campaigns", campaigns, children,
           <div className="flex justify-center mt-10">
             <button
               onClick={() => setShowCount((prev) => Math.min(prev + INITIAL_COUNT, campaigns.length))}
-              className="px-8 py-3 bg-bg-muted text-fg font-semibold rounded-xl hover:bg-border transition-colors"
+              className="px-8 py-3 bg-white/[0.04] backdrop-blur-2xl border border-white/10 text-fg-muted font-semibold rounded-xl hover:text-white hover:bg-white/10 hover:border-white/20 transition-all duration-500 ease-out"
             >
               Load More ({campaigns.length - showCount} remaining)
             </button>

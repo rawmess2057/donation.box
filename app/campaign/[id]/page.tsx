@@ -8,16 +8,13 @@ import CampaignDonateClient from "@/components/campaigns/CampaignDonateClient";
 import ShareButton from "@/components/campaigns/ShareButton";
 import ImpactCalculator from "@/components/campaigns/ImpactCalculator";
 import RealTimeProgressVisualizer from "@/components/campaigns/RealTimeProgressVisualizer";
-import { useTheme } from "@/lib/design-system/theme";
 import { getExplorerTxUrl } from "@/lib/explorer";
 import type { CampaignRecord } from "@/lib/campaigns";
 import { fadeInUp } from "@/lib/design-system/animations";
-import { Sun, Moon } from "lucide-react";
 
 export default function CampaignDetailPage() {
   const params = useParams();
   const id = params.id as string;
-  const { mode, toggle } = useTheme();
   const [campaign, setCampaign] = useState<CampaignRecord | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -52,27 +49,18 @@ export default function CampaignDetailPage() {
   return (
     <main className="min-h-screen bg-bg transition-colors duration-300">
       {isLoading ? (
-        <div className="max-w-6xl mx-auto px-4 pt-28 py-10 text-center text-fg-muted">
+        <div className="max-w-6xl mx-auto px-4 pt-10 py-10 text-center text-fg-muted">
           Loading campaign...
         </div>
       ) : !campaign ? (
-        <div className="max-w-6xl mx-auto px-4 pt-28 py-10 text-center">
+        <div className="max-w-6xl mx-auto px-4 pt-10 py-10 text-center">
           <h1 className="text-3xl font-bold text-fg">Campaign not found</h1>
           <p className="mt-2 text-fg-muted">
             This campaign doesn&apos;t exist or has been removed.
           </p>
         </div>
       ) : (
-        <div className="max-w-6xl mx-auto px-4 pt-24 pb-10">
-          <div className="flex justify-end mb-4">
-            <button
-              onClick={toggle}
-              className="p-2.5 rounded-xl bg-bg-muted text-fg-muted hover:text-fg hover:bg-border transition-colors"
-              aria-label={`Switch to ${mode === "light" ? "dark" : "light"} mode`}
-            >
-              {mode === "light" ? <Moon size={18} /> : <Sun size={18} />}
-            </button>
-          </div>
+        <div className="max-w-6xl mx-auto px-4 pt-6 pb-10">
 
           <div className="grid gap-8 md:grid-cols-3">
             <article className="md:col-span-2 space-y-6">
@@ -110,7 +98,7 @@ export default function CampaignDetailPage() {
 
               <ImpactCalculator impactDescription={campaign.impactDescription} />
 
-              <motion.div variants={fadeInUp} initial="hidden" animate="visible" className="rounded-2xl glass-card p-5 space-y-3">
+              <motion.div variants={fadeInUp} initial="hidden" animate="visible" className="rounded-2xl glass-surface p-5 space-y-3">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="rounded-full glass px-3 py-1 text-xs font-semibold text-fg-muted">
                     {campaign.category}

@@ -1,57 +1,30 @@
 @import "tailwindcss";
 
-.light {
-  --bg: #FFF9F0;
-  --bg-card: #FFFFFF;
-  --bg-muted: #F7F3EC;
-  --bg-elevated: #FFFFFF;
-  --fg: #1C1917;
-  --fg-muted: #78716C;
-  --fg-subtle: #A8A29E;
-  --primary: #D97706;
-  --primary-hover: #B45309;
-  --primary-soft: #FEF3C7;
-  --accent: #0D9488;
-  --accent-hover: #0F766E;
-  --accent-soft: #CCFBF1;
-  --success: #059669;
-  --success-soft: #D1FAE5;
-  --border: #E7E5E4;
-  --border-focus: #D97706;
-  --overlay: rgba(28, 25, 23, 0.5);
-  --glow: rgba(217, 119, 6, 0.15);
-  --glow-accent: rgba(13, 148, 136, 0.15);
-  --shadow-sm: 0 1px 2px rgba(28, 25, 23, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(28, 25, 23, 0.08);
-  --shadow-lg: 0 10px 15px -3px rgba(28, 25, 23, 0.08);
-  --shadow-xl: 0 20px 25px -5px rgba(28, 25, 23, 0.1);
-}
-
-.dark {
-  --bg: #0C0A09;
-  --bg-card: #1C1917;
-  --bg-muted: #292524;
-  --bg-elevated: #292524;
-  --fg: #F5F5F4;
-  --fg-muted: #A8A29E;
-  --fg-subtle: #78716C;
-  --primary: #F59E0B;
-  --primary-hover: #D97706;
-  --primary-soft: #451A03;
-  --accent: #14B8A6;
-  --accent-hover: #0D9488;
-  --accent-soft: #022C22;
-  --success: #34D399;
-  --success-soft: #022C22;
-  --border: #292524;
-  --border-focus: #F59E0B;
-  --overlay: rgba(12, 10, 9, 0.8);
-  --glow: rgba(245, 158, 11, 0.12);
-  --glow-accent: rgba(20, 184, 166, 0.12);
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+:root {
+  --bg: #000000;
+  --bg-card: #0a0a0a;
+  --bg-muted: #1a1a1a;
+  --bg-elevated: #111111;
+  --fg: #f0f0f0;
+  --fg-muted: #a0a0a0;
+  --fg-subtle: #707070;
+  --primary: #7fbf7f;
+  --primary-hover: #DC1FFF;
+  --primary-soft: rgba(127, 191, 127, 0.12);
+  --accent: #03E1FF;
+  --accent-hover: #DC1FFF;
+  --accent-soft: rgba(3, 225, 255, 0.12);
+  --success: #7fbf7f;
+  --success-soft: rgba(127, 191, 127, 0.1);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-focus: #DC1FFF;
+  --overlay: rgba(0, 0, 0, 0.7);
+  --glow: rgba(127, 191, 127, 0.15);
+  --glow-accent: rgba(3, 225, 255, 0.15);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.55);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
 }
 
 @theme inline {
@@ -95,16 +68,6 @@ h1, h2, h3, h4, h5, h6 {
   66% { transform: translateY(10px) rotate(-1deg); }
 }
 
-@keyframes floatSlow {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-30px); }
-}
-
-@keyframes floatSlower {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(15px); }
-}
-
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(24px); }
   to { opacity: 1; transform: translateY(0); }
@@ -121,8 +84,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .animate-float { animation: float 8s ease-in-out infinite; }
-.animate-float-slow { animation: floatSlow 12s ease-in-out infinite; }
-.animate-float-slower { animation: floatSlower 15s ease-in-out infinite; }
 
 .animate-fade-in-up { animation: fadeInUp 0.8s ease-out forwards; opacity: 0; }
 .animate-fade-in-up-1 { animation: fadeInUp 0.8s ease-out 0.1s forwards; opacity: 0; }
@@ -133,108 +94,8 @@ h1, h2, h3, h4, h5, h6 {
 .animate-shimmer { background-size: 200% auto; animation: shimmer 4s linear infinite; }
 .animate-pulse-glow { animation: pulseGlow 3s ease-in-out infinite; }
 
-@keyframes cardIn {
-  from { opacity: 0; transform: translateY(20px) scale(0.97); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.animate-card-in { animation: cardIn 0.5s ease-out forwards; opacity: 0; }
-.animate-card-in-1 { animation: cardIn 0.5s ease-out 0.05s forwards; opacity: 0; }
-.animate-card-in-2 { animation: cardIn 0.5s ease-out 0.1s forwards; opacity: 0; }
-
 .pb-safe { padding-bottom: max(0.5rem, env(safe-area-inset-bottom)); }
 .pt-safe { padding-top: max(0.5rem, env(safe-area-inset-top)); }
-
-/* Glass surface utilities */
-.glass {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-.dark .glass,
-.glass.dark {
-  background: rgba(12, 10, 9, 0.55);
-  border-color: rgba(255, 255, 255, 0.06);
-}
-
-.glass-card {
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
-}
-
-.dark .glass-card,
-.glass-card.dark {
-  background: rgba(12, 10, 9, 0.45);
-  border-color: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-}
-
-.glass-nav {
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.dark .glass-nav,
-.glass-nav.dark {
-  background: rgba(12, 10, 9, 0.65);
-  border-top-color: rgba(255, 255, 255, 0.06);
-}
-
-.glass-overlay {
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-.dark .glass-overlay,
-.glass-overlay.dark {
-  background: rgba(0, 0, 0, 0.3);
-}
-
-/* Liquid glass animations */
-@keyframes liquidShift {
-  0% { filter: url(#glass-subtle); }
-  25% { filter: url(#glass-medium); }
-  50% { filter: url(#glass-subtle); }
-  75% { filter: url(#glass-medium); }
-  100% { filter: url(#glass-subtle); }
-}
-
-@keyframes glassFloat {
-  0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
-  25% { transform: translate(30px, -20px) scale(1.05) rotate(2deg); }
-  50% { transform: translate(-10px, -40px) scale(0.95) rotate(-1deg); }
-  75% { transform: translate(20px, 10px) scale(1.02) rotate(1deg); }
-}
-
-@keyframes glassFloat2 {
-  0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
-  33% { transform: translate(-25px, 30px) scale(1.03) rotate(-2deg); }
-  66% { transform: translate(15px, -15px) scale(0.97) rotate(1deg); }
-}
-
-@keyframes glassFloat3 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(0, -25px) scale(1.04); }
-}
-
-.animate-glass-float { animation: glassFloat 12s ease-in-out infinite; }
-.animate-glass-float-2 { animation: glassFloat2 15s ease-in-out infinite; }
-.animate-glass-float-3 { animation: glassFloat3 10s ease-in-out infinite; }
-
-/* Liquid edge shimmer */
-@keyframes liquidEdge {
-  0% { opacity: 0.3; transform: scaleX(1) scaleY(1); }
-  50% { opacity: 0.6; transform: scaleX(1.02) scaleY(1.01); }
-  100% { opacity: 0.3; transform: scaleX(1) scaleY(1); }
-}
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
@@ -255,6 +116,44 @@ h1, h2, h3, h4, h5, h6 {
 .animate-river-flow {
   background-size: 200% 100%;
   animation: riverFlow 3s linear infinite;
+}
+
+/* Glass utility classes */
+.glass-surface {
+  backdrop-filter: blur(20px) saturate(200%);
+  -webkit-backdrop-filter: blur(20px) saturate(200%);
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(127, 191, 127, 0.12);
+  box-shadow: 0 4px 20px rgba(127, 191, 127, 0.06);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.glass-overlay {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background: rgba(33, 37, 41, 0.08);
+}
+
+/* Liquid glass filter applied via backdrop-filter reference */
+.liquid-glass {
+  backdrop-filter: blur(20px) saturate(200%) url(#glass-liquid);
+  -webkit-backdrop-filter: blur(20px) saturate(200%) url(#glass-liquid);
+}
+@keyframes glassBgFloat1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(40px, -30px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+@keyframes glassBgFloat2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-30px, 40px) scale(1.05); }
+}
+
+@keyframes glassBgFloat3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(20px, -40px) scale(0.9); }
+  66% { transform: translate(-30px, -10px) scale(1.15); }
 }
 
 /* Ripple effect for donations */

@@ -106,8 +106,8 @@ export default function CreatorDashboard({ creatorAddress }: { creatorAddress: s
             <Sparkles size={22} className="text-primary" />
             <h1 className="text-3xl font-bold text-fg font-[family-name:var(--font-heading)]">My Campaigns</h1>
           </div>
-          <div className="glass-card rounded-2xl p-16 text-center">
-            <div className="w-16 h-16 glass rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <div className="glass-surface rounded-2xl p-16 text-center">
+            <div className="w-16 h-16 glass-surface rounded-2xl flex items-center justify-center mx-auto mb-4">
               <Gift size={28} className="text-fg-subtle" />
             </div>
             <h2 className="text-xl font-bold text-fg mb-2">No campaigns yet</h2>
@@ -116,7 +116,7 @@ export default function CreatorDashboard({ creatorAddress }: { creatorAddress: s
             </p>
             <Link
               href="/create"
-              className="inline-flex items-center gap-2 bg-primary text-white font-bold py-3 px-8 rounded-xl hover:bg-primary-hover transition-all duration-200 hover:shadow-lg"
+              className="inline-flex items-center gap-2 bg-white/[0.04] backdrop-blur-2xl border border-white/20 text-white font-bold py-3 px-8 rounded-xl transition-all duration-500 ease-out shadow-[0_0_15px_rgba(127,191,127,0.15)] hover:shadow-[0_0_40px_rgba(127,191,127,0.3)] hover:border-primary/50 hover:bg-primary/15"
             >
               Create Your First Campaign
               <ArrowRight size={16} />
@@ -165,8 +165,8 @@ export default function CreatorDashboard({ creatorAddress }: { creatorAddress: s
                 onClick={() => setSelectedCampaignId(campaign.id)}
                 className={`w-full text-left p-3 rounded-xl transition-all duration-300 ${
                   selectedCampaign?.id === campaign.id
-                    ? "bg-primary text-white shadow-md"
-                    : "bg-bg-card text-fg hover:bg-bg-muted border border-border"
+                    ? "bg-primary/20 backdrop-blur-xl border border-primary/40 text-primary shadow-[0_0_10px_rgba(127,191,127,0.15)]"
+                    : "bg-white/[0.04] backdrop-blur-xl border border-white/10 text-fg hover:bg-white/10"
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -265,7 +265,7 @@ export default function CreatorDashboard({ creatorAddress }: { creatorAddress: s
               <div className="grid grid-cols-2 gap-4">
                 <Link
                   href={`/campaign/${selectedCampaign.id}`}
-                  className="group bg-accent hover:bg-accent-hover rounded-2xl p-5 text-white transition-all duration-300"
+                  className="group bg-white/[0.04] backdrop-blur-2xl border border-white/20 rounded-2xl p-5 text-white transition-all duration-500 ease-out hover:border-accent/50 hover:bg-accent/15 hover:shadow-[0_0_40px_rgba(3,225,255,0.25)]"
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shrink-0">

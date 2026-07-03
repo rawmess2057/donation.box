@@ -1,11 +1,10 @@
 "use client";
 
-import { Compass, Home, PlusCircle, BarChart3, Wallet, Flame, Sun, Moon } from "lucide-react";
+import { Compass, Home, PlusCircle, BarChart3, Wallet, Flame } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletReadyState } from "@solana/wallet-adapter-base";
-import { useTheme } from "@/lib/design-system/theme";
 
 const navItems = [
   { label: "Home", icon: Home, href: "/" },
@@ -18,7 +17,6 @@ const navItems = [
 export default function MobileNav() {
   const pathname = usePathname();
   const { disconnect, select, wallets, publicKey, connecting } = useWallet();
-  const { mode, toggle } = useTheme();
 
   const handleWalletClick = async () => {
     try {
@@ -59,7 +57,7 @@ export default function MobileNav() {
   };
 
   return (
-    <nav className="fixed top-0 left-0 w-full h-16 glass-nav z-50 flex items-center justify-between px-4">
+    <nav className="relative flex items-center justify-between px-4 h-16 backdrop-blur-xl saturate-[1.5] border-b bg-white/5 dark:bg-white/[0.03] border-white/10 dark:border-white/5">
       <Link href="/" className="flex items-center gap-2 font-bold text-fg font-[family-name:var(--font-heading)]">
         <span className="text-lg">◆</span>
         <span className="hidden sm:inline">Donation.Box</span>
@@ -84,14 +82,6 @@ export default function MobileNav() {
             </Link>
           );
         })}
-
-        <button
-          onClick={toggle}
-          className="p-2 rounded-xl text-fg-muted hover:text-fg hover:bg-bg-muted transition-colors"
-          aria-label={`Switch to ${mode === "light" ? "dark" : "light"} mode`}
-        >
-          {mode === "light" ? <Moon size={16} /> : <Sun size={16} />}
-        </button>
 
         <button
           onClick={handleWalletClick}

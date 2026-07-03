@@ -99,7 +99,7 @@ export default function CampaignCard({ campaign, index = 0 }: Props) {
             <span className="font-semibold text-fg-muted">{campaign.progress}%</span>
           </div>
 
-          <div className="block w-full text-center bg-primary hover:bg-primary-hover text-white font-semibold text-sm px-5 py-3 rounded-xl transition-all duration-300 shadow-lg shadow-glow hover:shadow-xl active:scale-[0.98]">
+          <div className="block w-full text-center bg-white/[0.04] backdrop-blur-2xl border border-white/20 text-white font-semibold text-sm px-5 py-3 rounded-xl transition-all duration-500 ease-out shadow-[0_0_15px_rgba(127,191,127,0.15)] hover:shadow-[0_0_40px_rgba(127,191,127,0.3)] hover:border-primary/50 hover:bg-primary/15 active:scale-[0.98]">
             Donate Now
           </div>
         </div>

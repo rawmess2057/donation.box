@@ -75,8 +75,8 @@ export default function ImpactFeedPage() {
 
   return (
     <main className="min-h-screen bg-bg">
-      <div className="glass border-b border-white/10 dark:border-white/5">
-        <div className="max-w-4xl mx-auto px-4 pt-24 pb-4">
+      <div className="glass-surface border-b border-white/10 dark:border-white/5">
+        <div className="max-w-4xl mx-auto px-4 pt-6 pb-4">
           <motion.div variants={fadeInUp} initial="hidden" animate="visible" className="flex items-center gap-2 mb-1">
             <Sparkles size={20} className="text-primary" />
             <h1 className="text-2xl md:text-3xl font-bold text-fg font-[family-name:var(--font-heading)]">
@@ -98,7 +98,7 @@ export default function ImpactFeedPage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 * i }}
-                className={`glass-card rounded-xl px-3 py-2.5 text-center`}
+                className={`glass-surface rounded-xl px-3 py-2.5 text-center`}
               >
                 <p className={`text-lg font-bold ${stat.color} tabular-nums`}>{stat.value}</p>
                 <p className="text-[10px] uppercase tracking-wider text-fg-muted font-semibold">{stat.label}</p>
@@ -113,8 +113,8 @@ export default function ImpactFeedPage() {
                 onClick={() => setSortBy(key)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-full font-semibold transition-all duration-200 ${
                   sortBy === key
-                    ? "bg-primary text-white shadow-md"
-                    : "glass text-fg-muted hover:text-fg"
+                    ? "bg-primary/20 backdrop-blur-xl border border-primary/40 text-primary shadow-[0_0_10px_rgba(127,191,127,0.15)]"
+                    : "bg-white/5 backdrop-blur-xl border border-white/10 text-fg-muted hover:text-fg"
                 }`}
               >
                 <Icon size={14} />
@@ -138,14 +138,14 @@ export default function ImpactFeedPage() {
 
         {isLoading ? (
           <div className="text-center py-16">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full glass mb-4">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full glass-surface mb-4">
               <div className="w-6 h-6 border-[3px] border-border border-t-primary rounded-full animate-spin" />
             </div>
             <p className="text-fg-muted text-sm font-medium">Loading impact feed...</p>
           </div>
         ) : feedItems.length === 0 ? (
           <div className="text-center py-16">
-            <div className="w-16 h-16 glass rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 glass-surface rounded-2xl flex items-center justify-center mx-auto mb-4">
               <TrendingUp size={28} className="text-fg-subtle" />
             </div>
             <h2 className="text-xl font-bold text-fg mb-1">No updates yet</h2>

@@ -213,7 +213,7 @@ export default function CreateCampaignPage() {
 
   return (
     <PartnerGuard>
-      <main className="bg-bg-muted min-h-screen py-14 pt-28 px-4">
+      <main className="bg-bg-muted min-h-screen py-14 pt-10 px-4">
         <section className="max-w-xl mx-auto">
           <header className="text-center mb-8">
             <h1 className="text-5xl font-bold text-fg font-[family-name:var(--font-heading)]">
@@ -225,7 +225,7 @@ export default function CreateCampaignPage() {
           </header>
 
           <form className="space-y-5" onSubmit={handleCreateCampaign}>
-            <div className="rounded-2xl glass-card p-5">
+            <div className="rounded-2xl glass-surface p-5">
               <h2 className="text-base font-semibold text-fg mb-4 font-[family-name:var(--font-heading)]">
                 Campaign Identity
               </h2>
@@ -274,7 +274,7 @@ export default function CreateCampaignPage() {
               </div>
             </div>
 
-            <div className="rounded-2xl glass-card p-5">
+            <div className="rounded-2xl glass-surface p-5">
               <h2 className="text-base font-semibold text-fg mb-4 font-[family-name:var(--font-heading)]">
                 Visuals & Goal
               </h2>
@@ -289,10 +289,10 @@ export default function CreateCampaignPage() {
                     <button
                       type="button"
                       onClick={() => setUploadMode("url")}
-                      className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+                      className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all duration-200 ${
                         uploadMode === "url"
-                          ? "bg-accent text-white"
-                          : "bg-bg text-fg-muted border border-border hover:bg-bg-muted"
+                          ? "bg-accent/20 backdrop-blur-xl border border-accent/40 text-accent shadow-[0_0_10px_rgba(3,225,255,0.15)]"
+                          : "bg-white/[0.04] backdrop-blur-xl border border-white/10 text-fg-muted hover:text-fg hover:bg-white/10"
                       }`}
                     >
                       URL
@@ -300,10 +300,10 @@ export default function CreateCampaignPage() {
                     <button
                       type="button"
                       onClick={() => setUploadMode("file")}
-                      className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+                      className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all duration-200 ${
                         uploadMode === "file"
-                          ? "bg-accent text-white"
-                          : "bg-bg text-fg-muted border border-border hover:bg-bg-muted"
+                          ? "bg-accent/20 backdrop-blur-xl border border-accent/40 text-accent shadow-[0_0_10px_rgba(3,225,255,0.15)]"
+                          : "bg-white/[0.04] backdrop-blur-xl border border-white/10 text-fg-muted hover:text-fg hover:bg-white/10"
                       }`}
                     >
                       Upload from device
@@ -410,7 +410,7 @@ export default function CreateCampaignPage() {
             <button
               type="submit"
               disabled={isSubmitting || isUploading}
-              className="w-full rounded-xl bg-accent hover:bg-accent-hover text-white font-bold py-3.5 transition disabled:cursor-not-allowed disabled:opacity-60 shadow-md"
+              className="w-full rounded-xl bg-white/[0.04] backdrop-blur-2xl border border-white/20 text-white font-bold py-3.5 transition-all duration-500 ease-out disabled:cursor-not-allowed disabled:opacity-60 shadow-[0_0_15px_rgba(3,225,255,0.1)] hover:shadow-[0_0_40px_rgba(3,225,255,0.25)] hover:border-accent/50 hover:bg-accent/15"
             >
               {isSubmitting ? getCreateActionLabel() : `Create Campaign on ${getNetworkLabel()}`}
             </button>

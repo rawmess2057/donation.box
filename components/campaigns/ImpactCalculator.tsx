@@ -38,7 +38,7 @@ export default function ImpactCalculator({
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className={`glass-card rounded-2xl p-5 ${className}`}
+      className={`glass-surface rounded-2xl p-5 ${className}`}
     >
       <h3 className="text-sm font-bold text-fg mb-4 font-[family-name:var(--font-heading)]">
         See Your Impact
