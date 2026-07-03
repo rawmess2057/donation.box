@@ -1,7 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import { Info, Share2 } from "lucide-react";
+import ProgressBar from "@/components/ui/ProgressBar";
 
 type DonationPanelProps = {
   raised: number;
@@ -13,7 +15,14 @@ type DonationPanelProps = {
   onDonate?: (amount: number, currency: "SOL") => void;
 };
 
-const PRESET_AMOUNTS = [0.1, 0.5, 1, 2];
+const PRESET_AMOUNTS = [
+  { value: 0.1, label: "0.1 SOL", impact: "≈ 2 meals" },
+  { value: 0.5, label: "0.5 SOL", impact: "≈ 10 meals" },
+  { value: 1, label: "1 SOL", impact: "≈ 20 meals" },
+  { value: 2, label: "2 SOL", impact: "≈ 40 meals" },
+];
+
+const SOL_TO_USD = 145;
 
 function formatMoney(value: number) {
   return value.toLocaleString(undefined, {
@@ -51,14 +60,12 @@ export default function DonationPanel({
 
   const isValidAmount = amountError === "";
   const remaining = Math.max(0, goal - raised);
+  const usdValue = finalAmount * SOL_TO_USD;
 
   const handleCustomAmountChange = (raw: string) => {
-    // Allow only digits and one decimal point.
     const cleaned = raw.replace(/[^\d.]/g, "");
     const parts = cleaned.split(".");
-    const normalized =
-      parts.length > 2 ? `${parts[0]}.${parts.slice(1).join("")}` : cleaned;
-
+    const normalized = parts.length > 2 ? `${parts[0]}.${parts.slice(1).join("")}` : cleaned;
     setCustomAmount(normalized);
   };
 
@@ -66,110 +73,128 @@ export default function DonationPanel({
     if (!isValidAmount) return;
     if (onDonate) {
       onDonate(finalAmount, currency);
-      return;
     }
-    // Fallback while wallet flow is not connected.
-    window.alert(`Proceeding to donate ${formatMoney(finalAmount)} ${currency}`);
   };
 
   return (
-    <aside className="rounded-2xl bg-[#F2EEE7] p-5 shadow-sm">
-      <div className="mb-4 flex items-end justify-between">
-        <div>
-          <p className="text-xs uppercase tracking-wide text-stone-500">Raised</p>
-          <p className="text-2xl font-bold text-[#9A432E]">
-            {formatMoney(raised)} <span className="text-sm">{currency}</span>
-          </p>
-        </div>
-        <div className="text-right">
-          <p className="text-xs uppercase tracking-wide text-stone-500">Goal</p>
-          <p className="text-xl font-semibold text-stone-900">{formatMoney(goal)} SOL</p>
-        </div>
-      </div>
+    <aside className="rounded-2xl glass-card p-5">
+      <ProgressBar
+        value={raised}
+        max={goal}
+        showPercentage
+        className="mb-5"
+      />
 
-      <div className="mb-2 h-2 w-full rounded bg-stone-300">
-        <div className="h-2 rounded bg-[#2D7774]" style={{ width: `${progress}%` }} />
-      </div>
-      <p className="mb-5 text-xs text-stone-600">
-        {progress}% funded · {formatMoney(remaining)} SOL remaining
-      </p>
-
-      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-stone-600">
+      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-fg-muted">
         Choose amount
       </p>
-      <div className="mb-3 grid grid-cols-4 gap-2">
-        {PRESET_AMOUNTS.map((amount) => {
-          const active = !customAmount && selectedAmount === amount;
+
+      <div className="mb-3 grid grid-cols-2 gap-2">
+        {PRESET_AMOUNTS.map(({ value, label, impact }) => {
+          const active = !customAmount && selectedAmount === value;
           return (
-            <button
-              key={amount}
+            <motion.button
+              key={value}
               type="button"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => {
-                setSelectedAmount(amount);
+                setSelectedAmount(value);
                 setCustomAmount("");
               }}
-              className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${
-                active
-                  ? "bg-[#9A432E] text-white"
-                  : "bg-white text-stone-800 hover:bg-stone-100"
-              }`}
+              className={`
+                rounded-xl px-3 py-3 text-left transition-all duration-200
+                ${active
+                  ? "bg-primary text-white shadow-md shadow-glow"
+                  : "bg-bg-card text-fg border border-border hover:border-primary/50"
+                }
+              `}
             >
-              {amount} SOL
-            </button>
+              <span className="text-sm font-bold block">{label}</span>
+              <span className={`text-[10px] ${active ? "text-white/70" : "text-fg-subtle"}`}>
+                {impact}
+              </span>
+            </motion.button>
           );
         })}
       </div>
 
-      <label className="mb-1 block text-xs uppercase tracking-wide text-stone-500">
+      <label className="mb-1 block text-xs uppercase tracking-wide text-fg-subtle">
         Custom amount ({currency})
       </label>
-      <input
-        type="text"
-        inputMode="decimal"
-        value={customAmount}
-        onChange={(e) => handleCustomAmountChange(e.target.value)}
-        placeholder="Custom amount"
-        className="mb-2 w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#2D7774]"
-      />
-      {amountError ? (
-        <p className="mb-3 text-xs text-red-600">{amountError}</p>
-      ) : (
-        <p className="mb-3 text-xs text-stone-500">
-          You are donating {formatMoney(finalAmount)} {currency}
+      <div className="relative mb-2">
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-fg-muted font-semibold">
+          ◎
+        </span>
+        <input
+          type="text"
+          inputMode="decimal"
+          value={customAmount}
+          onChange={(e) => handleCustomAmountChange(e.target.value)}
+          placeholder="0.00"
+          className="w-full rounded-xl border border-border bg-bg-card pl-8 pr-3 py-2.5 text-sm outline-none transition-colors focus:border-border-focus focus:ring-2 focus:ring-border-focus/20 text-fg placeholder:text-fg-subtle"
+        />
+      </div>
+
+      {isValidAmount && finalAmount > 0 && (
+        <p className="mb-2 text-xs text-fg-subtle">
+          ≈ ${formatMoney(usdValue)} USD ·{" "}
+          <span className="text-fg-muted font-medium">
+            {customAmount ? `Donating ${formatMoney(finalAmount)} SOL` : ""}
+          </span>
         </p>
       )}
 
-      <button
+      {amountError ? (
+        <p className="mb-3 text-xs text-red-500">{amountError}</p>
+      ) : null}
+
+      <motion.button
         type="button"
         disabled={!isValidAmount || isProcessing}
-        className="w-full rounded-xl bg-[#1E6E6B] py-3 font-semibold text-white transition hover:bg-[#185b58] disabled:cursor-not-allowed disabled:opacity-50"
+        whileHover={isValidAmount && !isProcessing ? { scale: 1.01 } : {}}
+        whileTap={isValidAmount && !isProcessing ? { scale: 0.99 } : {}}
+        className="w-full rounded-xl bg-accent hover:bg-accent-hover py-3.5 font-bold text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-glow-accent"
         onClick={handleDonate}
       >
-        {isProcessing ? "Processing..." : `Donate ${isValidAmount ? `${formatMoney(finalAmount)} SOL` : ""}`}
-      </button>
+        {isProcessing ? (
+          <span className="flex items-center justify-center gap-2">
+            <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+            Processing...
+          </span>
+        ) : (
+          `Donate ${isValidAmount ? `${formatMoney(finalAmount)} SOL` : ""}`
+        )}
+      </motion.button>
 
-      <div className="mt-4 flex items-center justify-between rounded-xl bg-[#DCD9D2] px-3 py-2">
+      <div className="mt-4 flex items-center justify-between rounded-xl glass px-3 py-2">
         <div className="flex items-center gap-3">
-          <div className="grid h-10 w-10 place-content-center rounded-full bg-stone-900 text-white">
-            {/* simple Solana-esque mark */}
-            <span className="text-xs font-bold">S</span>
+          <div className="grid h-9 w-9 place-content-center rounded-full bg-accent text-white text-xs font-bold">
+            S
           </div>
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-stone-900">
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-fg-muted">
               Powered by Solana
             </p>
-            <p className="text-xs text-stone-700">Instant & Transparent</p>
+            <p className="text-xs text-fg-subtle">Instant & Transparent</p>
           </div>
         </div>
-        <div className="flex items-center gap-2 text-stone-700">
-          <button type="button" className="rounded-md p-1 hover:bg-stone-200" aria-label="Share campaign">
+        <div className="flex items-center gap-1 text-fg-muted">
+          <button type="button" className="rounded-md p-1.5 hover:bg-white/10 transition-colors" aria-label="Share campaign">
             <Share2 className="h-4 w-4" />
           </button>
-          <button type="button" className="rounded-md p-1 hover:bg-stone-200" aria-label="Donation info">
+          <button type="button" className="rounded-md p-1.5 hover:bg-white/10 transition-colors" aria-label="Donation info">
             <Info className="h-4 w-4" />
           </button>
         </div>
       </div>
+
+      <p className="mt-3 text-[11px] text-center text-fg-subtle">
+        {progress}% funded · {formatMoney(remaining)} SOL remaining
+      </p>
     </aside>
   );
 }

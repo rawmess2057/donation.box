@@ -3,14 +3,21 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import CampaignDonateClient from "@/components/campaigns/CampaignDonateClient";
 import ShareButton from "@/components/campaigns/ShareButton";
+import ImpactCalculator from "@/components/campaigns/ImpactCalculator";
+import RealTimeProgressVisualizer from "@/components/campaigns/RealTimeProgressVisualizer";
+import { useTheme } from "@/lib/design-system/theme";
 import { getExplorerTxUrl } from "@/lib/explorer";
 import type { CampaignRecord } from "@/lib/campaigns";
+import { fadeInUp } from "@/lib/design-system/animations";
+import { Sun, Moon } from "lucide-react";
 
 export default function CampaignDetailPage() {
   const params = useParams();
   const id = params.id as string;
+  const { mode, toggle } = useTheme();
   const [campaign, setCampaign] = useState<CampaignRecord | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -22,9 +29,7 @@ export default function CampaignDetailPage() {
       try {
         const response = await fetch(`/api/campaigns/${id}`, { cache: "no-store" });
         if (!response.ok) {
-          if (active) {
-            setCampaign(null);
-          }
+          if (active) setCampaign(null);
           return;
         }
 
@@ -33,9 +38,7 @@ export default function CampaignDetailPage() {
           setCampaign(payload.campaign ?? null);
         }
       } finally {
-        if (active) {
-          setIsLoading(false);
-        }
+        if (active) setIsLoading(false);
       }
     }
 
@@ -47,58 +50,73 @@ export default function CampaignDetailPage() {
   }, [id]);
 
   return (
-    <main className="min-h-screen bg-[#F7F3EC] px-4 pt-28 py-10">
-      <section className="mx-auto grid max-w-6xl gap-8 md:grid-cols-3">
-        {isLoading ? (
-          <div className="md:col-span-3 text-center py-10 text-stone-600">
-            Loading campaign...
+    <main className="min-h-screen bg-bg transition-colors duration-300">
+      {isLoading ? (
+        <div className="max-w-6xl mx-auto px-4 pt-28 py-10 text-center text-fg-muted">
+          Loading campaign...
+        </div>
+      ) : !campaign ? (
+        <div className="max-w-6xl mx-auto px-4 pt-28 py-10 text-center">
+          <h1 className="text-3xl font-bold text-fg">Campaign not found</h1>
+          <p className="mt-2 text-fg-muted">
+            This campaign doesn&apos;t exist or has been removed.
+          </p>
+        </div>
+      ) : (
+        <div className="max-w-6xl mx-auto px-4 pt-24 pb-10">
+          <div className="flex justify-end mb-4">
+            <button
+              onClick={toggle}
+              className="p-2.5 rounded-xl bg-bg-muted text-fg-muted hover:text-fg hover:bg-border transition-colors"
+              aria-label={`Switch to ${mode === "light" ? "dark" : "light"} mode`}
+            >
+              {mode === "light" ? <Moon size={18} /> : <Sun size={18} />}
+            </button>
           </div>
-        ) : !campaign ? (
-          <div className="md:col-span-3 text-center py-10">
-            <h1 className="text-3xl font-bold text-[#1f2937]">Campaign not found</h1>
-            <p className="mt-2 text-stone-600">
-              This campaign doesn&apos;t exist or has been removed.
-            </p>
-          </div>
-        ) : (
-          <>
-            <article className="md:col-span-2 rounded-2xl bg-[#F2EEE7] p-5 shadow-sm">
-              <div className="relative mb-5 overflow-hidden rounded-xl">
+
+          <div className="grid gap-8 md:grid-cols-3">
+            <article className="md:col-span-2 space-y-6">
+              <motion.div variants={fadeInUp} initial="hidden" animate="visible" className="relative overflow-hidden rounded-2xl">
                 <Image
                   src={campaign.image}
                   alt={campaign.title}
                   width={1200}
                   height={700}
-                  className="h-[320px] w-full object-cover"
-                  priority
+                  className="h-[400px] w-full object-cover"
+                  preload
                 />
                 {campaign.verified && (
-                  <span className="absolute left-3 top-3 rounded-full bg-[#2D7774] px-3 py-1 text-xs font-semibold text-white">
+                  <span className="absolute left-4 bottom-4 rounded-full bg-accent/90 backdrop-blur-sm px-3 py-1.5 text-xs font-semibold text-white">
                     Verified cause
                   </span>
                 )}
-              </div>
+              </motion.div>
 
-              <h1 className="text-3xl font-bold leading-tight text-[#1f2937]">
-                {campaign.title}
-              </h1>
-              <p className="mt-2 text-sm text-stone-600">{campaign.subtitle}</p>
+              <motion.div variants={fadeInUp} initial="hidden" animate="visible" className="space-y-4">
+                <h1 className="text-3xl md:text-4xl font-bold text-fg leading-tight font-[family-name:var(--font-heading)]">
+                  {campaign.title}
+                </h1>
+                <p className="text-lg text-fg-muted">{campaign.subtitle}</p>
 
-              <div className="my-5 h-px bg-stone-300" />
+                <div className="h-px bg-border" />
 
-              <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-stone-600">
-                The Story
-              </h2>
-              <p className="leading-relaxed text-stone-700">{campaign.story}</p>
+                <h2 className="text-sm font-semibold uppercase tracking-wide text-fg-muted">
+                  The Story
+                </h2>
+                <p className="leading-relaxed text-fg font-[family-name:var(--font-body)]">
+                  {campaign.story}
+                </p>
+              </motion.div>
 
-              {/* Campaign metadata */}
-              <div className="mt-6 rounded-xl bg-white/70 p-4 space-y-2">
+              <ImpactCalculator impactDescription={campaign.impactDescription} />
+
+              <motion.div variants={fadeInUp} initial="hidden" animate="visible" className="rounded-2xl glass-card p-5 space-y-3">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded-full bg-stone-200 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-stone-700">
+                  <span className="rounded-full glass px-3 py-1 text-xs font-semibold text-fg-muted">
                     {campaign.category}
                   </span>
                   {!campaign.verified && (
-                    <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">
+                    <span className="rounded-full bg-primary-soft px-3 py-1 text-xs font-semibold text-primary">
                       User Created
                     </span>
                   )}
@@ -107,35 +125,23 @@ export default function CampaignDetailPage() {
                 <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
                   {campaign.creator && (
                     <div className="col-span-2 md:col-span-1">
-                      <span className="text-xs font-semibold uppercase tracking-wide text-stone-500">
-                        Creator
-                      </span>
-                      <p className="mt-0.5 font-mono text-xs text-stone-700 break-all">
+                      <span className="text-xs font-semibold uppercase tracking-wide text-fg-subtle">Creator</span>
+                      <p className="mt-0.5 font-mono text-xs text-fg-muted break-all">
                         {campaign.creator.slice(0, 4)}...{campaign.creator.slice(-4)}
                       </p>
                     </div>
                   )}
                   <div>
-                    <span className="text-xs font-semibold uppercase tracking-wide text-stone-500">
-                      Goal
-                    </span>
-                    <p className="mt-0.5 text-stone-700">
-                      {campaign.goal.toLocaleString()} SOL
-                    </p>
+                    <span className="text-xs font-semibold uppercase tracking-wide text-fg-subtle">Goal</span>
+                    <p className="mt-0.5 text-fg">{campaign.goal.toLocaleString()} SOL</p>
                   </div>
                   <div>
-                    <span className="text-xs font-semibold uppercase tracking-wide text-stone-500">
-                      Raised
-                    </span>
-                    <p className="mt-0.5 text-stone-700 font-semibold">
-                      {campaign.raised.toLocaleString()} SOL
-                    </p>
+                    <span className="text-xs font-semibold uppercase tracking-wide text-fg-subtle">Raised</span>
+                    <p className="mt-0.5 text-fg font-semibold">{campaign.raised.toLocaleString()} SOL</p>
                   </div>
                   <div className="col-span-2">
-                    <span className="text-xs font-semibold uppercase tracking-wide text-stone-500">
-                      Created
-                    </span>
-                    <p className="mt-0.5 text-stone-700">
+                    <span className="text-xs font-semibold uppercase tracking-wide text-fg-subtle">Created</span>
+                    <p className="mt-0.5 text-fg">
                       {new Date(campaign.createdAt).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "long",
@@ -149,18 +155,32 @@ export default function CampaignDetailPage() {
                   href={getExplorerTxUrl(campaign.txSignature)}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-1 inline-flex items-center gap-1.5 text-sm font-semibold text-[#1E6E6B] hover:text-[#155552] transition-colors"
+                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-accent-hover transition-colors"
                 >
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                   </svg>
                   View on Solana Explorer
                 </a>
-              </div>
+              </motion.div>
             </article>
 
-            <aside className="flex flex-col gap-4">
-              <ShareButton campaignId={id} campaignTitle={campaign.title} />
+            <aside className="flex flex-col gap-4 md:sticky md:top-24 md:self-start">
+              <div className="flex gap-2">
+                <div className="flex-1">
+                  <ShareButton campaignId={id} campaignTitle={campaign.title} />
+                </div>
+              </div>
+
+              <RealTimeProgressVisualizer
+                raised={campaign.raised}
+                goal={campaign.goal}
+                recentDonors={campaign.donations.slice(-5).map((d) => ({
+                  address: d.donor,
+                  amount: d.amount,
+                }))}
+              />
+
               <CampaignDonateClient
                 raised={campaign.raised}
                 goal={campaign.goal}
@@ -170,21 +190,19 @@ export default function CampaignDetailPage() {
                 campaignTitle={campaign.title}
                 campaignImage={campaign.image}
                 campaignCreator={campaign.creator}
+                impactDescription={campaign.impactDescription}
                 onDonationSuccess={(amount) => {
                   setCampaign((current) =>
                     current
-                      ? {
-                          ...current,
-                          raised: current.raised + amount,
-                        }
+                      ? { ...current, raised: current.raised + amount }
                       : current,
                   );
                 }}
               />
             </aside>
-          </>
-        )}
-      </section>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

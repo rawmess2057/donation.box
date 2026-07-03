@@ -1,5 +1,23 @@
 [
   {
+    "id": "campaign_1783056117014_fwf31c",
+    "title": "Child Education",
+    "subtitle": "Education",
+    "category": "Education",
+    "story": "THis will help a child in rural nepal to get better education",
+    "image": "/uploads/1783056111555_05cm7e.jpg",
+    "goal": 100,
+    "raised": 0,
+    "currency": "SOL",
+    "creator": "CD69UjQitwnnPwHkFSYNsL2Qh7PW3hdqBNU1cQSrXFj",
+    "txSignature": "c8uPMPCG2uXy6mZBDDjFsS39owwP9vjFAvY174iJVvgMGe1RQbJMTes9MeDzvnTLMRZ98xDdkU9LwXH63yXWV8L",
+    "createdAt": "2026-07-03T05:21:57.014Z",
+    "verified": false,
+    "progress": 0,
+    "donations": [],
+    "updates": []
+  },
+  {
     "id": "campaign_1778817280264_oktcnr",
     "title": "Rerum dignissimos la",
     "subtitle": "Environment",
@@ -25,14 +43,24 @@
     "story": "Dolore dignissimos a",
     "image": "/uploads/1778817023346_2ts67y.webp",
     "goal": 76,
-    "raised": 0,
+    "raised": 0.1,
     "currency": "SOL",
     "creator": "CD69UjQitwnnPwHkFSYNsL2Qh7PW3hdqBNU1cQSrXFj",
     "txSignature": "2jX6Mk2j2DrGpUctiomLxwSE7WFKAbKH8nAXj1DsxDAL6jUveNxK4kaaWgLbhVezi1QUqHtoSGtYqAbY6DhhE94s",
     "createdAt": "2026-05-15T03:50:29.324Z",
     "verified": false,
     "progress": 0,
-    "donations": [],
+    "donations": [
+      {
+        "donor": "CD69UjQitwnnPwHkFSYNsL2Qh7PW3hdqBNU1cQSrXFj",
+        "amount": 0.1,
+        "signature": "5exDMd4g7nhaXdPSAUmBeUCNzHwBdzAoNpfLf6pP28TtJxZcRUsyCLCECu5id4LxQBzPXDvzTHgEkYxZVvE5c1E5",
+        "timestamp": 1783055811050,
+        "id": "donation_1783055811911_iph3gv",
+        "likes": 0,
+        "comments": 0
+      }
+    ],
     "updates": []
   },
   {

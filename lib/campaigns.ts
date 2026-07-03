@@ -35,6 +35,7 @@ export type CampaignRecord = {
   txSignature: string;
   createdAt: string;
   verified: boolean;
+  impactDescription?: string;
   donations: CampaignDonation[];
   updates: CampaignUpdate[];
 };

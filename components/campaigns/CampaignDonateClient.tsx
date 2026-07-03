@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { WalletReadyState } from "@solana/wallet-adapter-base";
 import {
   Connection,
@@ -12,7 +13,12 @@ import {
 } from "@solana/web3.js";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import DonationPanel from "@/components/campaigns/DonationPanel";
-import DonationSuccessScreen from "@/components/campaigns/DonationSuccessScreen";
+import { useToast } from "@/components/ui/Toast";
+
+const DonationSuccessScreen = dynamic(
+  () => import("@/components/campaigns/DonationSuccessScreen"),
+  { ssr: false },
+);
 
 type CampaignDonateClientProps = {
   raised: number;
@@ -23,6 +29,7 @@ type CampaignDonateClientProps = {
   campaignTitle?: string;
   campaignImage?: string;
   campaignCreator?: string;
+  impactDescription?: string;
   onDonationSuccess?: (amount: number) => void;
 };
 
@@ -35,10 +42,12 @@ export default function CampaignDonateClient({
   campaignTitle = "Campaign",
   campaignImage,
   campaignCreator,
+  impactDescription,
   onDonationSuccess,
 }: CampaignDonateClientProps) {
   const { connection } = useConnection();
   const { publicKey, select, wallets, wallet, signTransaction } = useWallet();
+  const { show } = useToast();
   const [isProcessing, setIsProcessing] = useState(false);
   const [txError, setTxError] = useState<string>("");
   const [txSignature, setTxSignature] = useState<string>("");
@@ -108,6 +117,13 @@ export default function CampaignDonateClient({
         throw new Error("Wallet does not support signing transactions.");
       }
 
+      const simulation = await rpcConnection.simulateTransaction(transaction);
+      if (simulation.value.err) {
+        throw new Error(
+          `Transaction simulation failed: ${JSON.stringify(simulation.value.err)}`,
+        );
+      }
+
       const signedTransaction = await signTransaction(transaction);
       const signature = await rpcConnection.sendRawTransaction(
         signedTransaction.serialize(),
@@ -141,13 +157,12 @@ export default function CampaignDonateClient({
   };
 
   const handleDonate = async (amount: number) => {
-    if (isProcessing) {
-      return;
-    }
+    if (isProcessing) return;
 
     setTxError("");
     setTxSignature("");
     setIsProcessing(true);
+    show(`Preparing donation of ${amount.toFixed(2)} SOL...`, "info");
 
     try {
       const selectedWallet = wallet ?? selectPreferredWallet();
@@ -159,6 +174,7 @@ export default function CampaignDonateClient({
       }
 
       if (!selectedWallet.adapter.connected) {
+        show("Connecting wallet...", "info");
         try {
           await selectedWallet.adapter.connect();
         } catch (error) {
@@ -189,14 +205,14 @@ export default function CampaignDonateClient({
         );
       }
 
+      show("Sending transaction...", "info");
+
       const signature = await sendDonationTransaction(connection, payer, amount);
 
       if (campaignId) {
         const response = await fetch(`/api/campaigns/${campaignId}/donations`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             donor: payer.toBase58(),
             amount,
@@ -209,7 +225,7 @@ export default function CampaignDonateClient({
         });
 
         if (!response.ok) {
-          throw new Error("Donation was sent on devnet, but updating the campaign failed.");
+          show("Donation sent on-chain, but tracking update failed.", "info");
         }
       }
 
@@ -217,14 +233,13 @@ export default function CampaignDonateClient({
       setDonatedAmount(amount);
       setDonorName(payer.toBase58().slice(0, 8));
       setShowSuccessScreen(true);
+      show("Donation confirmed! Thank you!", "success");
       onDonationSuccess?.(amount);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
 
       if (errorMessage === "TRANSACTION_ALREADY_PROCESSED") {
-        setTxError(
-          "Your previous donation might have gone through. Check your wallet or try again in a moment.",
-        );
+        setTxError("Your previous donation might have gone through. Check your wallet.");
       } else if (
         errorMessage.includes("User rejected") ||
         errorMessage.includes("cancelled")
@@ -233,16 +248,13 @@ export default function CampaignDonateClient({
       } else if (errorMessage.includes("Insufficient balance")) {
         setTxError(errorMessage);
       } else if (errorMessage.includes("insufficient lamports")) {
-        setTxError(
-          "Your wallet doesn't have enough SOL for this donation. Please add funds and try again.",
-        );
+        setTxError("Your wallet doesn't have enough SOL for this donation.");
       } else if (errorMessage.includes("Simulation failed")) {
-        setTxError(
-          "Transaction simulation failed. Your wallet may not have sufficient balance for this donation amount.",
-        );
+        setTxError("Transaction simulation failed.");
       } else {
         setTxError(errorMessage || "Failed to submit transaction.");
       }
+      show(txError || "Transaction failed.", "error");
     } finally {
       setIsProcessing(false);
     }
@@ -257,17 +269,16 @@ export default function CampaignDonateClient({
 
   return (
     <>
-      {showSuccessScreen && txSignature && (
-        <DonationSuccessScreen
-          donorName={donorName || "Friend"}
-          amountInSOL={donatedAmount}
-          currency="SOL"
-          txSignature={txSignature}
-          impactMessage="Your donation is making a real difference in people's lives. Thank you for your generosity!"
-          onDonateAgain={handleDonateAgain}
-          onClose={() => setShowSuccessScreen(false)}
-        />
-      )}
+      <DonationSuccessScreen
+        donorName={donorName || "Friend"}
+        amountInSOL={donatedAmount}
+        currency="SOL"
+        txSignature={txSignature}
+        impactMessage={impactDescription || "Your donation is making a real difference in people's lives."}
+        onDonateAgain={handleDonateAgain}
+        onClose={() => setShowSuccessScreen(false)}
+        open={showSuccessScreen && !!txSignature}
+      />
 
       <div className="space-y-3">
         <DonationPanel
@@ -278,7 +289,7 @@ export default function CampaignDonateClient({
           onDonate={handleDonate}
         />
         {txError && (
-          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+          <p className="rounded-lg bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 px-3 py-2 text-sm text-red-700 dark:text-red-400">
             {txError}
           </p>
         )}

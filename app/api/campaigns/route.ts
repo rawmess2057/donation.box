@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createCampaign, getAllCampaigns } from "@/lib/server/campaignRepository";
+import { isPartnerWallet } from "@/lib/server/partnerRepository";
 
 export const runtime = "nodejs";
 
@@ -32,6 +33,7 @@ export async function POST(request: Request) {
       txSignature,
       createdAt,
       verified,
+      impactDescription,
     } = body;
 
     if (
@@ -50,6 +52,14 @@ export async function POST(request: Request) {
       );
     }
 
+    const isPartner = await isPartnerWallet(creator);
+    if (!isPartner) {
+      return NextResponse.json(
+        { error: "Only partner organizations can create campaigns." },
+        { status: 403 },
+      );
+    }
+
     const campaign = await createCampaign({
       id,
       title,
@@ -64,6 +74,7 @@ export async function POST(request: Request) {
       txSignature,
       createdAt,
       verified: Boolean(verified),
+      impactDescription: impactDescription || undefined,
     });
 
     return NextResponse.json({ campaign }, { status: 201 });
