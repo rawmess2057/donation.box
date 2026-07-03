@@ -132,7 +132,7 @@ export default function DonationPanel({
           value={customAmount}
           onChange={(e) => handleCustomAmountChange(e.target.value)}
           placeholder="0.00"
-          className="w-full rounded-xl border border-border bg-bg-card pl-8 pr-3 py-2.5 text-sm outline-none transition-colors focus:border-border-focus focus:ring-2 focus:ring-border-focus/20 text-fg placeholder:text-fg-subtle"
+          className="w-full rounded-xl border border-white/15 bg-white/[0.04] backdrop-blur-xl pl-8 pr-3 py-2.5 text-sm outline-none transition-all duration-300 focus:border-primary/50 focus:shadow-[0_0_12px_rgba(127,191,127,0.1)] text-fg placeholder:text-fg-subtle"
         />
       </div>
 

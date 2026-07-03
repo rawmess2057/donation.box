@@ -84,7 +84,7 @@ GlassCard.Actions = function GlassCardActions({
   className?: string;
 }) {
   return (
-    <div className={`mt-5 flex flex-wrap items-center gap-3 pt-4 border-t border-[var(--glass-border-light)] dark:border-[var(--glass-border-dark)] ${className}`}>
+    <div className={`mt-5 flex flex-wrap items-center gap-3 pt-4 border-t border-white/10 ${className}`}>
       {children}
     </div>
   );

@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 export default function ScrollArrow() {
   return (
     <motion.div
-      className="group rounded-full border-2 border-border p-2 cursor-pointer"
+      className="group rounded-full border-2 border-white/15 bg-white/[0.04] backdrop-blur-xl p-2 cursor-pointer"
       animate={{ y: [0, 8, 0] }}
       transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
       whileHover={{ scale: 1.15, borderColor: "rgba(127,191,127,0.4)", backgroundColor: "rgba(127,191,127,0.12)" }}

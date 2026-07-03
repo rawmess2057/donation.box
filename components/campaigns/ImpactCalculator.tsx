@@ -21,17 +21,11 @@ export default function ImpactCalculator({
   impactDescription,
   className = "",
 }: ImpactCalculatorProps) {
-  const [amount, setAmount] = useState(0.5);
+  const [rawValue, setRawValue] = useState(22);
 
   if (!impactDescription) return null;
 
-  const sliderValue = Math.log10(amount * 100 + 1) * 50;
-
-  const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = Number(e.target.value);
-    const computed = Math.round((Math.pow(10, raw / 50) - 1) * 100) / 100;
-    setAmount(Math.max(0.01, Math.min(10, computed)));
-  };
+  const amount = 0.01 + Math.pow(rawValue / 100, 2) * 9.99;
 
   return (
     <motion.div
@@ -58,8 +52,8 @@ export default function ImpactCalculator({
         type="range"
         min="0"
         max="100"
-        value={Math.round(sliderValue)}
-        onChange={handleSliderChange}
+        value={rawValue}
+        onChange={(e) => setRawValue(Number(e.target.value))}
         className="w-full h-2 bg-bg-muted rounded-full appearance-none cursor-pointer accent-primary
           [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5
           [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary

@@ -1,4 +1,4 @@
-import { ActionGetResponse, ACTIONS_CORS_HEADERS } from "@solana/actions";
+import { ActionGetResponse, ACTIONS_CORS_HEADERS } from "@/lib/solana-actions";
 import { getCampaignById } from "@/lib/server/campaignRepository";
 
 export const GET = async (req: Request) => {

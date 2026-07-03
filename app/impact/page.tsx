@@ -75,7 +75,7 @@ export default function ImpactFeedPage() {
 
   return (
     <main className="min-h-screen bg-bg">
-      <div className="glass-surface border-b border-white/10 dark:border-white/5">
+      <div className="glass-surface border-b border-white/10">
         <div className="max-w-4xl mx-auto px-4 pt-6 pb-4">
           <motion.div variants={fadeInUp} initial="hidden" animate="visible" className="flex items-center gap-2 mb-1">
             <Sparkles size={20} className="text-primary" />

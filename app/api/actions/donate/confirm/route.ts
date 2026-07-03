@@ -2,7 +2,7 @@ import {
   ActionPostResponse,
   ACTIONS_CORS_HEADERS,
   createPostResponse,
-} from "@solana/actions";
+} from "@/lib/solana-actions";
 import {
   Connection,
   PublicKey,

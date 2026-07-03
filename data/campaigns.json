@@ -1,5 +1,43 @@
 [
   {
+    "id": "campaign_1783087099146_2z98u1",
+    "title": "Ex et quia amet eli",
+    "subtitle": "Education",
+    "category": "Education",
+    "story": "Commodi autem ut mai",
+    "image": "/uploads/1783087087842_l6xg94.jpg",
+    "goal": 22,
+    "raised": 1,
+    "currency": "SOL",
+    "creator": "CD69UjQitwnnPwHkFSYNsL2Qh7PW3hdqBNU1cQSrXFj",
+    "txSignature": "3k1KpyaVtHMX9JxgbPpBrMUAySju9ofkEWS3oD4G3AdFmFZf2cGDHAG9pqn4zJXGYnUMevkeFmFEwcXPyTtRXnEj",
+    "createdAt": "2026-07-03T13:58:19.146Z",
+    "verified": false,
+    "impactDescription": "Sit explicabo Quia",
+    "progress": 5,
+    "donations": [
+      {
+        "donor": "Dd6CCfgnA5aRddzVsVtuZvRqznm18hHtD7poWXrPafZc",
+        "amount": 0.5,
+        "signature": "5YRWSsb2GZGzBjs2b3oyagoA5tq28Qz8J5aih5G3N1ViA5NYKfJkjd3k4bKDpmnmy1UNc6x55qbj46pQo3kEPiap",
+        "timestamp": 1783087287103,
+        "id": "donation_1783087287242_rimmda",
+        "likes": 0,
+        "comments": 0
+      },
+      {
+        "donor": "Dd6CCfgnA5aRddzVsVtuZvRqznm18hHtD7poWXrPafZc",
+        "amount": 0.5,
+        "signature": "CDeM9k6MNpanyY9ENVoziZ18M3aTGR8c1dZzEY59U59U4yWiCreWDwxZErv4CUd4qfmkUs1GCNjPjrdknqi2f6M",
+        "timestamp": 1783087190508,
+        "id": "donation_1783087190637_dsh6db",
+        "likes": 0,
+        "comments": 0
+      }
+    ],
+    "updates": []
+  },
+  {
     "id": "campaign_1783056117014_fwf31c",
     "title": "Child Education",
     "subtitle": "Education",
@@ -7,14 +45,33 @@
     "story": "THis will help a child in rural nepal to get better education",
     "image": "/uploads/1783056111555_05cm7e.jpg",
     "goal": 100,
-    "raised": 0,
+    "raised": 0.6,
     "currency": "SOL",
     "creator": "CD69UjQitwnnPwHkFSYNsL2Qh7PW3hdqBNU1cQSrXFj",
     "txSignature": "c8uPMPCG2uXy6mZBDDjFsS39owwP9vjFAvY174iJVvgMGe1RQbJMTes9MeDzvnTLMRZ98xDdkU9LwXH63yXWV8L",
     "createdAt": "2026-07-03T05:21:57.014Z",
     "verified": false,
-    "progress": 0,
-    "donations": [],
+    "progress": 1,
+    "donations": [
+      {
+        "donor": "CD69UjQitwnnPwHkFSYNsL2Qh7PW3hdqBNU1cQSrXFj",
+        "amount": 0.1,
+        "signature": "3FJBC4uLiEMCocZLrkbYdHSQ6NU8MBcBfsstxWzEddXGnZSQ6nYrZH1P3MTMDzodj4Fh7RX6Jbvkpjb9SM4PzjoL",
+        "timestamp": 1783086989208,
+        "id": "donation_1783086989384_idt5rb",
+        "likes": 0,
+        "comments": 0
+      },
+      {
+        "donor": "CD69UjQitwnnPwHkFSYNsL2Qh7PW3hdqBNU1cQSrXFj",
+        "amount": 0.5,
+        "signature": "43Y4euu87hmoAMwCxLb4qmVBX7oQ1uubdZNgMLFcZyzrWFnSD8TEe23aoNBLxi2majr9iAf3rifKsP3pqB5gmD9v",
+        "timestamp": 1783078720754,
+        "id": "donation_1783078721905_1q80pt",
+        "likes": 0,
+        "comments": 0
+      }
+    ],
     "updates": []
   },
   {

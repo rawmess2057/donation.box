@@ -17,10 +17,10 @@ interface CardProps {
 }
 
 const variantStyles: Record<string, string> = {
-  default: "bg-bg-card border border-primary/10 shadow-sm",
-  elevated: "bg-bg-card border border-primary/10 shadow-md",
-  bordered: "bg-bg-card border border-primary/20",
-  glow: "bg-bg-card border border-primary/10 shadow-lg shadow-glow",
+  default: "bg-gradient-to-br from-primary/[0.04] via-transparent to-accent/[0.02] backdrop-blur-2xl border border-white/10",
+  elevated: "bg-gradient-to-br from-primary/[0.04] via-transparent to-accent/[0.02] backdrop-blur-2xl border border-white/15 shadow-md",
+  bordered: "bg-gradient-to-br from-primary/[0.04] via-transparent to-accent/[0.02] backdrop-blur-2xl border border-white/20",
+  glow: "bg-gradient-to-br from-primary/[0.04] via-transparent to-accent/[0.02] backdrop-blur-2xl border border-white/10 shadow-[0_0_20px_rgba(127,191,127,0.12)]",
 };
 
 export default function Card({
@@ -84,7 +84,7 @@ Card.Button = function CardButton({
 }: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
   return (
     <a
-      className={`inline-block bg-white/15 hover:bg-white/25 border border-white/30 hover:border-white/50 text-white px-6 py-2.5 rounded-full text-base no-underline cursor-pointer transition-all duration-300 hover:-translate-y-0.5 ${className}`}
+      className={`inline-block bg-white/[0.04] backdrop-blur-2xl border border-white/20 text-white px-6 py-2.5 rounded-full text-base no-underline cursor-pointer transition-all duration-500 ease-out shadow-[0_0_15px_rgba(127,191,127,0.15)] hover:shadow-[0_0_40px_rgba(127,191,127,0.3)] hover:border-primary/50 hover:bg-primary/15 hover:-translate-y-0.5 ${className}`}
       {...props}
     >
       {children}

@@ -1,31 +1,34 @@
 import Link from "next/link";
-import CampaignGrid from "@/components/campaigns/CampaignGrid";
-import ProjectDiscoveryFeed from "@/components/campaigns/ProjectDiscoveryFeed";
 import HeroSection from "@/components/hero/HeroSection";
+import HowItWorksSection from "@/components/sections/HowItWorksSection";
+import CampaignShowcaseGrid from "@/components/sections/CampaignShowcaseGrid";
+import CreatorsSection from "@/components/sections/CreatorsSection";
+import DonorsSection from "@/components/sections/DonorsSection";
+import TechSection from "@/components/sections/TechSection";
+import VideoShowcaseSection from "@/components/sections/VideoShowcaseSection";
 import type { Campaign } from "@/components/campaigns/types";
 import {
   sortCampaignsByTrending,
   sortCampaignsByLatest,
 } from "@/lib/campaigns";
 import { getAllCampaigns } from "@/lib/server/campaignRepository";
-import { getNetworkLabel } from "@/lib/explorer";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const allCampaigns: Campaign[] = await getAllCampaigns();
-  const trendingCampaigns = sortCampaignsByTrending(allCampaigns).slice(0, 3);
-  const latestCampaigns = sortCampaignsByLatest(allCampaigns).slice(0, 3);
+  const trendingCampaigns = sortCampaignsByTrending(allCampaigns);
+  const latestCampaigns = sortCampaignsByLatest(allCampaigns);
   return (
     <main className="bg-bg">
       <HeroSection />
 
-      <section id="hero-next" className="px-4 pt-10 pb-12">
+      <section id="hero-next" className="px-4 pt-20 pb-12">
         <div className="max-w-7xl mx-auto glass-surface rounded-3xl px-6 py-5 grid grid-cols-3 gap-4 text-center">
           <div>
             <p className="text-primary text-4xl font-bold leading-none tabular-nums">24.8 SOL</p>
             <p className="text-fg-muted text-xs md:text-sm uppercase tracking-wide mt-1">
-              Demo Liquidity
+              Funds Raised
             </p>
           </div>
           <div>
@@ -35,40 +38,25 @@ export default async function HomePage() {
             </p>
           </div>
           <div>
-            <p className="text-success text-4xl font-bold leading-none">{getNetworkLabel()}</p>
+            <p className="text-success text-4xl font-bold leading-none">1000</p>
             <p className="text-fg-muted text-xs md:text-sm uppercase tracking-wide mt-1">
-              Ready to Test
+              Donors
             </p>
           </div>
         </div>
       </section>
 
-      <ProjectDiscoveryFeed
-        campaigns={allCampaigns}
-        title="Discover Projects"
-        description="Trending campaigns making an impact right now"
-        className="mb-8"
-      />
+      <HowItWorksSection />
 
-      <CampaignGrid title="Trending Campaigns" campaigns={trendingCampaigns}>
-        <Link
-          href="/explore"
-          className="inline-flex items-center gap-1 text-sm font-semibold text-accent hover:text-accent-hover transition"
-        >
-          View all campaigns
-          <span aria-hidden="true">&rarr;</span>
-        </Link>
-      </CampaignGrid>
+      <CampaignShowcaseGrid trending={trendingCampaigns} latest={latestCampaigns} />
 
-      <CampaignGrid title="Latest Campaigns" campaigns={latestCampaigns}>
-        <Link
-          href="/explore"
-          className="inline-flex items-center gap-1 text-sm font-semibold text-accent hover:text-accent-hover transition"
-        >
-          View all campaigns
-          <span aria-hidden="true">&rarr;</span>
-        </Link>
-      </CampaignGrid>
+      <CreatorsSection />
+
+      <DonorsSection />
+
+      <TechSection />
+
+      <VideoShowcaseSection />
 
       <section className="px-4 pb-16">
         <div className="max-w-7xl mx-auto rounded-3xl bg-gradient-to-r from-accent via-accent-hover to-accent py-16 text-center relative overflow-hidden">

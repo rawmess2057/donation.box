@@ -289,7 +289,7 @@ export default function CampaignDonateClient({
           onDonate={handleDonate}
         />
         {txError && (
-          <p className="rounded-lg bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 px-3 py-2 text-sm text-red-700 dark:text-red-400">
+          <p className="rounded-lg bg-red-950/30 backdrop-blur border border-red-800/50 px-3 py-2 text-sm text-red-300">
             {txError}
           </p>
         )}

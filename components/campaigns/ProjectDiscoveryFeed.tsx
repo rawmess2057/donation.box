@@ -109,7 +109,7 @@ export default function ProjectDiscoveryFeed({
           ref={scrollRef}
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
-          className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-none -mx-6 px-6"
+          className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory no-scrollbar -mx-6 px-6"
         >
           {sorted.slice(0, 8).map((campaign, i) => (
             <motion.div

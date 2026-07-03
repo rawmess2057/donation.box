@@ -11,8 +11,8 @@ export default function GlassNav({ children, className = "" }: GlassNavProps) {
       className={[
         "fixed top-0 left-0 w-full z-50",
         "backdrop-blur-2xl saturate-[2] border-b",
-        "bg-white/10 dark:bg-black/50",
-        "border-white/15 dark:border-white/5",
+        "bg-white/10",
+        "border-white/15",
         "shadow-[0_4px_30px_rgba(0,0,0,0.05)]",
         className,
       ].join(" ")}

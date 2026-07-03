@@ -1,7 +1,6 @@
 "use client";
 
 import { motion, type Variants } from "framer-motion";
-import Link from "next/link";
 import ScrollArrow from "@/components/ui/ScrollArrow";
 
 const containerVariants: Variants = {
@@ -61,7 +60,7 @@ const fadeUp: Variants = {
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-[90vh] flex items-center pt-10 overflow-hidden">
+    <section className="relative flex items-center pt-10 overflow-hidden">
       {/* Four corner Solana parallelograms */}
       <motion.div
         className="absolute top-[10%] left-[3%] w-[100px] h-[40px]"
@@ -114,7 +113,7 @@ export default function HeroSection() {
         </motion.span>
 
         <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-[1.1] tracking-tight text-fg font-[family-name:var(--font-heading)]">
-          <motion.span variants={headingLeft} className="block">Rebuilding Hope,</motion.span>
+          <motion.span variants={headingLeft} className="block">For</motion.span>
           <motion.span
             variants={gradientReveal}
             className="block bg-gradient-to-r from-primary via-accent to-success bg-clip-text text-transparent"
@@ -122,55 +121,39 @@ export default function HeroSection() {
             animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
             transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
           >
-            One Community
+            Creators
           </motion.span>
-          <motion.span variants={headingRight} className="block">at a Time</motion.span>
+          <motion.span variants={fadeUp} className="block text-fg-muted">&amp;</motion.span>
+          <motion.span
+            variants={headingRight}
+            className="block bg-gradient-to-r from-accent via-success to-primary bg-clip-text text-transparent"
+            style={{ backgroundSize: "200% 100%" }}
+            animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+          >
+            Causes
+          </motion.span>
         </h1>
 
-        <motion.p
-          variants={fadeUp}
-          className="mt-6 text-lg md:text-xl text-fg-muted max-w-2xl mx-auto leading-relaxed"
-        >
-          Join our mission to empower rural Nepali communities through
-          sustainable crowdfunding and transparent fundraising on Solana.
+        <motion.p variants={fadeUp} className="mt-8 flex items-center justify-center gap-2 text-xs tracking-wide">
+          <motion.span
+            className="bg-gradient-to-r from-primary via-accent to-success bg-clip-text text-transparent"
+            style={{ backgroundSize: "200% 100%" }}
+            animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+          >
+            Powered by Solana{" "}
+            <img src="/solanaLogo.svg" alt="" className="w-4 h-4 inline-block align-middle opacity-70" />{" "}
+            Non-Custodial
+          </motion.span>
         </motion.p>
-
-        <motion.div variants={fadeUp} className="mt-8 flex flex-wrap justify-center gap-4">
-          <motion.div
-            whileHover={{ scale: 1.05, y: -4 }}
-            whileTap={{ scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            className="group"
-          >
-            <Link
-              href="/explore"
-              className="block bg-white/[0.04] backdrop-blur-2xl border border-white/20 text-white font-semibold text-lg px-10 py-4 rounded-2xl shadow-[0_0_15px_rgba(127,191,127,0.15)] hover:shadow-[0_0_40px_rgba(127,191,127,0.3)] hover:border-primary/50 hover:bg-primary/15 transition-all duration-500 ease-out"
-            >
-              Start Exploring
-              <span className="ml-2 inline-block transition-transform duration-500 ease-out group-hover:translate-x-2">&rarr;</span>
-            </Link>
-          </motion.div>
-
-          <motion.div
-            whileHover={{ scale: 1.05, y: -4 }}
-            whileTap={{ scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            className="group"
-          >
-            <Link
-              href="/create"
-              className="block bg-white/[0.04] backdrop-blur-2xl border border-white/20 text-accent font-semibold text-lg px-10 py-4 rounded-2xl shadow-[0_0_15px_rgba(3,225,255,0.1)] hover:shadow-[0_0_40px_rgba(3,225,255,0.25)] hover:border-accent/50 hover:text-white hover:bg-accent/15 transition-all duration-500 ease-out"
-            >
-              Start a Campaign
-              <span className="ml-2 inline-block transition-transform duration-500 ease-out group-hover:translate-x-2">&rarr;</span>
-            </Link>
-          </motion.div>
-        </motion.div>
 
         <motion.div variants={fadeUp} className="mt-16 flex justify-center">
           <ScrollArrow />
         </motion.div>
       </motion.div>
+
+      <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-b from-transparent to-bg pointer-events-none" />
     </section>
   );
 }

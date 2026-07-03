@@ -18,7 +18,7 @@ const TYPE_STYLES: Record<string, { label: string; bg: string; text: string; ico
   donation: { label: "Donation", bg: "bg-success-soft", text: "text-success", icon: "🎁" },
   update: { label: "Update", bg: "bg-accent-soft", text: "text-accent", icon: "📸" },
   milestone: { label: "Milestone", bg: "bg-primary-soft", text: "text-primary", icon: "🏆" },
-  cnft: { label: "cNFT Proof", bg: "bg-purple-100 dark:bg-purple-900/30", text: "text-purple-700 dark:text-purple-300", icon: "🪪" },
+  cnft: { label: "cNFT Proof", bg: "bg-purple-950/30", text: "text-purple-300", icon: "🪪" },
 };
 
 const TYPE_COLORS: Record<string, string> = {
@@ -73,7 +73,7 @@ export default function FeedItemComponent({ item, index = 0, onLike }: FeedItemC
   return (
     <motion.article
       variants={fadeInUp}
-      className="group bg-bg-card rounded-2xl border border-border hover:shadow-lg hover:border-primary/20 transition-all duration-300 overflow-hidden"
+      className="group bg-gradient-to-br from-primary/[0.04] via-transparent to-accent/[0.02] backdrop-blur-2xl border border-white/10 rounded-2xl hover:shadow-[0_0_30px_rgba(127,191,127,0.1)] transition-all duration-300 overflow-hidden"
     >
       <div className="relative p-4 flex items-center gap-3 overflow-hidden">
         <div className={`absolute left-0 top-0 bottom-0 w-1 ${TYPE_COLORS[item.type] ?? "bg-accent"}`} />
@@ -128,7 +128,7 @@ export default function FeedItemComponent({ item, index = 0, onLike }: FeedItemC
               </div>
             )}
             {item.content && (
-              <p className="text-sm text-fg leading-relaxed bg-bg-muted rounded-xl p-3">
+              <p className="text-sm text-fg leading-relaxed bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-xl p-3">
                 {item.content}
               </p>
             )}
@@ -147,13 +147,13 @@ export default function FeedItemComponent({ item, index = 0, onLike }: FeedItemC
         )}
 
         {item.type === "cnft" && (
-          <div className="bg-purple-50 dark:bg-purple-950/30 rounded-xl p-4 border border-purple-200/50 dark:border-purple-800/50">
+          <div className="bg-purple-950/20 backdrop-blur-xl rounded-xl p-4 border border-purple-800/40">
             <div className="flex items-start gap-3">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-violet-400 flex items-center justify-center text-white shadow-lg shrink-0">
                 <Sparkles size={22} />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-bold uppercase tracking-wide text-purple-700 dark:text-purple-300 mb-1">
+                <p className="text-xs font-bold uppercase tracking-wide text-purple-300 mb-1">
                   🪪 Compressed NFT Minted
                 </p>
                 <p className="text-sm font-semibold text-fg">Impact verified on-chain</p>
@@ -163,7 +163,7 @@ export default function FeedItemComponent({ item, index = 0, onLike }: FeedItemC
                     href={`https://explorer.solana.com/address/${item.cNFTMintId}?cluster=${resolveCluster()}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1 mt-2 text-xs font-mono text-purple-600 bg-purple-100 dark:bg-purple-900/50 dark:text-purple-300 rounded-lg px-2.5 py-1.5 hover:bg-purple-200 dark:hover:bg-purple-800/50 transition-colors"
+                    className="inline-flex items-center gap-1 mt-2 text-xs font-mono text-purple-300 bg-purple-900/40 border border-purple-700/50 rounded-lg px-2.5 py-1.5 hover:bg-purple-800/50 transition-colors"
                   >
                     {truncateWallet(item.cNFTMintId)}
                     <ExternalLink size={10} />
@@ -175,7 +175,7 @@ export default function FeedItemComponent({ item, index = 0, onLike }: FeedItemC
         )}
       </div>
 
-      <div className="px-4 py-3 border-t border-border flex items-center justify-between text-fg-muted">
+      <div className="px-4 py-3 border-t border-white/10 flex items-center justify-between text-fg-muted">
         <button
           onClick={() => void handleLike()}
           disabled={liked}

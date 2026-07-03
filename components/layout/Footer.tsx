@@ -75,7 +75,7 @@ export default function Footer() {
         className="absolute inset-x-0 bottom-0 flex justify-center pointer-events-none select-none"
         aria-hidden="true"
       >
-        <span className="text-[clamp(80px,20vw,180px)] font-bold leading-none text-primary/[100] dark:text-primary/[0.04] whitespace-nowrap">
+        <span className="text-[clamp(80px,20vw,180px)] font-bold leading-none text-primary/[0.04] whitespace-nowrap">
           donation.box
         </span>
       </div>

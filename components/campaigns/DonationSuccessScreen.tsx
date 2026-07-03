@@ -137,13 +137,13 @@ export default function DonationSuccessScreen({
                       {impactMessage}
                     </p>
 
-                    <div className="flex items-center gap-3 bg-bg-card rounded-2xl p-4">
+                    <div className="flex items-center gap-3 bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-2xl p-4">
                       <span className="text-3xl font-bold text-primary tabular-nums">
                         <AnimatedNumber to={amountInSOL} suffix={` ${currency}`} decimals={4} />
                       </span>
                     </div>
 
-                    <div className="pt-4 mt-4 border-t border-border space-y-2">
+                    <div className="pt-4 mt-4 border-t border-white/10 space-y-2">
                       <div className="flex justify-between items-center text-sm">
                         <span className="font-semibold text-fg-muted">Transaction</span>
                         <a
@@ -155,7 +155,7 @@ export default function DonationSuccessScreen({
                           Solana Explorer ↗
                         </a>
                       </div>
-                      <div className="flex justify-between items-center bg-bg-card rounded-xl p-3 border border-border">
+                      <div className="flex justify-between items-center bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-xl p-3">
                         <span className="font-bold text-fg text-sm">
                           {amountInSOL.toFixed(4)} {currency}
                         </span>
@@ -198,7 +198,7 @@ export default function DonationSuccessScreen({
                 </motion.div>
               </div>
 
-              <div className="md:col-span-5 glass-surface p-6 flex items-center justify-center relative border-l border-white/10 dark:border-white/5">
+              <div className="md:col-span-5 glass-surface p-6 flex items-center justify-center relative border-l border-white/10">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -246,7 +246,7 @@ export default function DonationSuccessScreen({
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 text-xs font-bold text-fg-subtle pt-2 border-t border-border">
+                    <div className="flex items-center gap-2 text-xs font-bold text-fg-subtle pt-2 border-t border-white/10">
                       <span>💎</span>
                       <span className="truncate">
                         MINT_ID: e627...{txSignature.slice(-4).toUpperCase()}

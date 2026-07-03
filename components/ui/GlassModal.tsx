@@ -49,7 +49,7 @@ export default function GlassModal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="absolute inset-0 bg-black/30 dark:bg-black/50 backdrop-blur-md"
+            className="absolute inset-0 bg-black/50 backdrop-blur-md"
             onClick={(e) => {
               if (e.target === overlayRef.current) onClose();
             }}
@@ -63,14 +63,14 @@ export default function GlassModal({
             className={[
               "relative w-full max-w-lg rounded-2xl overflow-hidden",
               "backdrop-blur-xl saturate-[1.8] border",
-              "bg-white/8 dark:bg-black/40",
-              "border-white/15 dark:border-white/10",
+              "bg-white/8",
+              "border-white/15",
               "shadow-[0_25px_50px_-12px_rgba(0,0,0,0.3)]",
               className,
             ].join(" ")}
           >
             {title && (
-              <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-white/10 dark:border-white/5">
+              <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-white/10">
                 <h2 className="text-lg font-bold text-fg font-[family-name:var(--font-heading)]">
                   {title}
                 </h2>
