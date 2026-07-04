@@ -74,7 +74,7 @@ export default function PartnerGuard({ children }: PartnerGuardProps) {
         </p>
         <a
           href="mailto:partners@donation.box"
-          className="mt-2 inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-hover"
+          className="mt-2 inline-flex items-center gap-2 rounded-xl bg-white/[0.04] backdrop-blur-2xl border border-white/20 text-accent px-5 py-2.5 text-sm font-semibold transition-all duration-500 ease-out shadow-[0_0_15px_rgba(3,225,255,0.1)] hover:shadow-[0_0_40px_rgba(3,225,255,0.25)] hover:border-accent/50 hover:text-white hover:bg-accent/15"
         >
           Apply for Partnership
         </a>

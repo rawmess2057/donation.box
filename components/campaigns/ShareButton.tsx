@@ -44,7 +44,7 @@ export default function ShareButton({
     <div className="relative">
       <button
         onClick={() => setShowOptions(!showOptions)}
-        className="flex items-center gap-2 rounded-xl bg-accent hover:bg-accent-hover px-4 py-2.5 font-semibold text-white transition-all active:scale-95 shadow-md"
+        className="flex items-center gap-2 rounded-xl bg-white/[0.04] backdrop-blur-2xl border border-white/20 text-accent px-4 py-2.5 font-semibold transition-all duration-500 ease-out active:scale-95 shadow-[0_0_15px_rgba(3,225,255,0.1)] hover:shadow-[0_0_40px_rgba(3,225,255,0.25)] hover:border-accent/50 hover:text-white hover:bg-accent/15"
         title="Share this campaign"
       >
         <Share2 size={18} />
@@ -53,8 +53,8 @@ export default function ShareButton({
 
       {showOptions && (
         <>
-          <div className="absolute right-0 top-full mt-2 w-72 rounded-2xl border border-border bg-bg-card shadow-xl z-50 overflow-hidden">
-            <div className="border-b border-border px-4 py-3">
+          <div className="absolute right-0 top-full mt-2 w-72 rounded-2xl border border-white/10 bg-gradient-to-br from-primary/[0.04] via-transparent to-accent/[0.02] backdrop-blur-2xl shadow-xl z-50 overflow-hidden">
+            <div className="border-b border-white/10 px-4 py-3">
               <h3 className="font-semibold text-fg">Share Campaign</h3>
               <p className="text-xs text-fg-muted mt-1">
                 Share via Solana Blinks or social media
@@ -83,7 +83,7 @@ export default function ShareButton({
 
               <button
                 onClick={() => setShowQR(!showQR)}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-bg-muted transition text-left"
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/10 transition text-left"
               >
                 <QrCode size={20} className="text-accent shrink-0" />
                 <div>
@@ -96,7 +96,7 @@ export default function ShareButton({
 
               <button
                 onClick={handleShareTwitter}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-blue-50 dark:hover:bg-blue-950 transition text-left"
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-blue-950/40 transition text-left"
               >
                 <Send size={20} className="text-blue-500 shrink-0" />
                 <div>
@@ -107,7 +107,7 @@ export default function ShareButton({
 
               <a
                 href={`/campaign/${campaignId}`}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-bg-muted transition text-left"
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/10 transition text-left"
               >
                 <Link2 size={20} className="text-accent shrink-0" />
                 <div>
@@ -118,17 +118,17 @@ export default function ShareButton({
             </div>
 
             {showQR && (
-              <div className="border-t border-border p-4">
+              <div className="border-t border-white/10 p-4">
                 <p className="text-xs font-semibold text-fg-muted mb-3 uppercase tracking-wide">
                   Scan with Phantom or Backpack
                 </p>
-                <div className="bg-white rounded-xl border border-border p-3 flex justify-center">
+                <div className="bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-xl p-3 flex justify-center">
                   <img src={qrCodeUrl} alt="Campaign Blink QR Code" className="w-40 h-40" />
                 </div>
               </div>
             )}
 
-            <div className="border-t border-border px-4 py-2 bg-bg-muted">
+            <div className="border-t border-white/10 px-4 py-2 bg-white/[0.04] backdrop-blur-xl">
               <p className="text-xs text-fg-muted">
                 Blinks work best with Phantom and Backpack mobile wallets
               </p>

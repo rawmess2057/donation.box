@@ -23,7 +23,7 @@ export default function DonationMoment({
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.8, y: -20 }}
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="relative overflow-hidden rounded-2xl bg-bg-card border border-accent/30 shadow-lg shadow-glow-accent p-4"
+          className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/[0.04] via-transparent to-accent/[0.02] backdrop-blur-2xl border border-accent/30 shadow-lg shadow-glow-accent p-4"
         >
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <motion.div

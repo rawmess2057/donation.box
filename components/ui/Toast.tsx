@@ -37,7 +37,7 @@ const iconMap: Record<ToastVariant, React.ReactNode> = {
 
 const bgMap: Record<ToastVariant, string> = {
   success: "bg-success-soft border-success/30",
-  error: "bg-red-50 border-red-200 dark:bg-red-950 dark:border-red-800",
+  error: "bg-red-950/30 backdrop-blur border-red-800/50",
   info: "bg-accent-soft border-accent/30",
 };
 

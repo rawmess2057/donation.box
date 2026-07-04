@@ -4,6 +4,12 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Upload, X, Loader } from "lucide-react";
 
+const glassCard =
+  "bg-gradient-to-br from-primary/[0.04] via-transparent to-accent/[0.02] backdrop-blur-2xl border border-white/10 rounded-2xl";
+
+const glassInput =
+  "w-full h-32 p-3 border border-white/15 rounded-xl focus:border-primary/50 focus:shadow-[0_0_12px_rgba(127,191,127,0.1)] focus:outline-none resize-none bg-white/[0.04] backdrop-blur-xl text-fg placeholder:text-fg-subtle/60 transition-all duration-300";
+
 type PostImpactProps = {
   campaignId: string;
   campaignTitle: string;
@@ -68,7 +74,7 @@ export default function PostImpact({
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="w-full bg-primary hover:bg-primary-hover text-white font-bold py-3 px-4 rounded-2xl transition-all shadow-md"
+          className="w-full bg-white/[0.04] backdrop-blur-2xl border border-white/20 text-white font-bold py-3 px-4 rounded-2xl transition-all duration-500 ease-out shadow-[0_0_15px_rgba(127,191,127,0.15)] hover:shadow-[0_0_40px_rgba(127,191,127,0.3)] hover:border-primary/50 hover:bg-primary/15"
         >
           Share Impact Update
         </button>
@@ -82,22 +88,22 @@ export default function PostImpact({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="bg-bg-card rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-border"
+              className={glassCard + " max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"}
             >
-              <div className="sticky top-0 bg-bg-card border-b border-border p-4 flex items-center justify-between">
+              <div className="sticky top-0 bg-gradient-to-br from-primary/[0.04] via-transparent to-accent/[0.02] backdrop-blur-2xl border-b border-white/10 rounded-t-2xl p-4 flex items-center justify-between">
                 <h2 className="text-xl font-bold text-fg font-[family-name:var(--font-heading)]">
                   Share Impact Update
                 </h2>
                 <button
                   onClick={() => { setIsOpen(false); setContent(""); setImagePreview(null); }}
-                  className="p-1 hover:bg-bg-muted rounded-full transition"
+                  className="p-1 hover:bg-white/10 rounded-full transition"
                 >
                   <X size={24} className="text-fg-muted" />
                 </button>
               </div>
 
               <div className="p-6 space-y-4">
-                <div className="bg-bg-muted rounded-xl p-3 flex items-center gap-3">
+                <div className="bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-xl p-3 flex items-center gap-3">
                   {campaignImage && (
                     <img src={campaignImage} alt={campaignTitle} className="w-10 h-10 rounded-lg object-cover" />
                   )}
@@ -115,7 +121,7 @@ export default function PostImpact({
                     value={content}
                     onChange={(e) => setContent(e.target.value.slice(0, 500))}
                     placeholder="Share what you've accomplished, photos, stories of impact..."
-                    className="w-full h-32 p-3 border border-border rounded-xl focus:ring-2 focus:ring-border-focus focus:outline-none resize-none bg-bg text-fg placeholder:text-fg-subtle"
+                    className={glassInput}
                   />
                   <p className="text-xs text-fg-subtle mt-1">{content.length}/500 characters</p>
                 </div>
@@ -125,7 +131,7 @@ export default function PostImpact({
                     Proof Photo / Evidence
                   </label>
                   {!imagePreview ? (
-                    <label className="border-2 border-dashed border-border rounded-xl p-6 text-center cursor-pointer hover:border-accent transition bg-bg block">
+                    <label className="border-2 border-dashed border-white/15 bg-white/[0.04] backdrop-blur-xl rounded-xl p-6 text-center cursor-pointer hover:border-primary/50 hover:shadow-[0_0_12px_rgba(127,191,127,0.1)] transition-all duration-300 block">
                       <div className="flex flex-col items-center gap-2">
                         <Upload size={32} className="text-fg-subtle" />
                         <p className="font-semibold text-fg-muted">Click to upload image</p>
@@ -147,17 +153,17 @@ export default function PostImpact({
                 </div>
               </div>
 
-              <div className="sticky bottom-0 bg-bg-card border-t border-border p-4 flex gap-3">
+              <div className="sticky bottom-0 bg-gradient-to-br from-primary/[0.04] via-transparent to-accent/[0.02] backdrop-blur-2xl border-t border-white/10 rounded-b-2xl p-4 flex gap-3">
                 <button
                   onClick={() => { setIsOpen(false); setContent(""); setImagePreview(null); }}
-                  className="flex-1 px-4 py-2 border border-border rounded-xl text-fg font-semibold hover:bg-bg-muted transition"
+                  className="flex-1 px-4 py-2 border border-white/15 bg-white/[0.04] backdrop-blur-xl rounded-xl text-fg font-semibold hover:bg-white/10 transition-all duration-300"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handlePost}
                   disabled={isPosting || !content.trim()}
-                  className="flex-1 bg-primary text-white font-semibold py-2 px-4 rounded-xl hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center justify-center gap-2"
+                  className="flex-1 bg-white/[0.04] backdrop-blur-2xl border border-white/20 text-white font-semibold py-2 px-4 rounded-xl transition-all duration-500 ease-out disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(127,191,127,0.15)] hover:shadow-[0_0_40px_rgba(127,191,127,0.3)] hover:border-primary/50 hover:bg-primary/15"
                 >
                   {isPosting && <Loader size={16} className="animate-spin" />}
                   {isPosting ? "Posting..." : "Share Impact Update"}

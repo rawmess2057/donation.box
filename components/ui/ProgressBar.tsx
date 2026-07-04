@@ -42,7 +42,7 @@ export default function ProgressBar({
         </div>
       )}
 
-      <div className="relative h-3 bg-bg-muted rounded-full overflow-hidden">
+      <div className="relative h-3 bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-full overflow-hidden">
         <motion.div
           className={`absolute inset-y-0 left-0 rounded-full ${barColor} animate-river-flow`}
           initial={{ width: 0 }}
@@ -59,7 +59,7 @@ export default function ProgressBar({
           return (
             <div
               key={i}
-              className="absolute top-1/2 -translate-y-1/2 w-5 h-5 bg-white border-2 border-accent rounded-full shadow-md flex items-center justify-center"
+              className="absolute top-1/2 -translate-y-1/2 w-5 h-5 bg-white/20 backdrop-blur-xl border-2 border-accent rounded-full shadow-md flex items-center justify-center"
               style={{ left: `${m.at}%`, marginLeft: "-10px" }}
               title={m.label}
             >

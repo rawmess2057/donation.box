@@ -77,7 +77,7 @@ export default function DonationPanel({
   };
 
   return (
-    <aside className="rounded-2xl glass-card p-5">
+    <aside className="rounded-2xl glass-surface p-5 liquid-glass">
       <ProgressBar
         value={raised}
         max={goal}
@@ -105,13 +105,13 @@ export default function DonationPanel({
               className={`
                 rounded-xl px-3 py-3 text-left transition-all duration-200
                 ${active
-                  ? "bg-primary text-white shadow-md shadow-glow"
-                  : "bg-bg-card text-fg border border-border hover:border-primary/50"
+                  ? "bg-primary/20 backdrop-blur-xl border border-primary/40 text-primary shadow-[0_0_10px_rgba(127,191,127,0.15)]"
+                  : "bg-white/[0.04] backdrop-blur-xl border border-white/10 text-fg hover:border-primary/50"
                 }
               `}
             >
               <span className="text-sm font-bold block">{label}</span>
-              <span className={`text-[10px] ${active ? "text-white/70" : "text-fg-subtle"}`}>
+              <span className={`text-[10px] ${active ? "text-primary/70" : "text-fg-subtle"}`}>
                 {impact}
               </span>
             </motion.button>
@@ -132,7 +132,7 @@ export default function DonationPanel({
           value={customAmount}
           onChange={(e) => handleCustomAmountChange(e.target.value)}
           placeholder="0.00"
-          className="w-full rounded-xl border border-border bg-bg-card pl-8 pr-3 py-2.5 text-sm outline-none transition-colors focus:border-border-focus focus:ring-2 focus:ring-border-focus/20 text-fg placeholder:text-fg-subtle"
+          className="w-full rounded-xl border border-white/15 bg-white/[0.04] backdrop-blur-xl pl-8 pr-3 py-2.5 text-sm outline-none transition-all duration-300 focus:border-primary/50 focus:shadow-[0_0_12px_rgba(127,191,127,0.1)] text-fg placeholder:text-fg-subtle"
         />
       </div>
 
@@ -154,7 +154,7 @@ export default function DonationPanel({
         disabled={!isValidAmount || isProcessing}
         whileHover={isValidAmount && !isProcessing ? { scale: 1.01 } : {}}
         whileTap={isValidAmount && !isProcessing ? { scale: 0.99 } : {}}
-        className="w-full rounded-xl bg-accent hover:bg-accent-hover py-3.5 font-bold text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-glow-accent"
+        className="w-full rounded-xl bg-white/[0.04] backdrop-blur-2xl border border-white/20 text-white font-bold py-3.5 transition-all duration-500 ease-out disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(3,225,255,0.1)] hover:shadow-[0_0_40px_rgba(3,225,255,0.25)] hover:border-accent/50 hover:bg-accent/15"
         onClick={handleDonate}
       >
         {isProcessing ? (
@@ -170,7 +170,7 @@ export default function DonationPanel({
         )}
       </motion.button>
 
-      <div className="mt-4 flex items-center justify-between rounded-xl glass px-3 py-2">
+      <div className="mt-4 flex items-center justify-between rounded-xl glass-surface px-3 py-2">
         <div className="flex items-center gap-3">
           <div className="grid h-9 w-9 place-content-center rounded-full bg-accent text-white text-xs font-bold">
             S

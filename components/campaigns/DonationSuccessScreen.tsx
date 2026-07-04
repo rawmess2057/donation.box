@@ -91,7 +91,7 @@ export default function DonationSuccessScreen({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 30 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="glass-card max-w-4xl w-full rounded-3xl overflow-hidden shadow-2xl relative"
+            className="glass-surface max-w-4xl w-full rounded-3xl overflow-hidden shadow-2xl relative"
           >
             <button
               onClick={onClose}
@@ -121,7 +121,7 @@ export default function DonationSuccessScreen({
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.35, duration: 0.5 }}
-                  className="glass rounded-3xl p-6 relative overflow-hidden mb-6"
+                  className="glass-surface rounded-3xl p-6 relative overflow-hidden mb-6"
                 >
                   <div className="relative z-10 space-y-4">
                     <div className="flex items-center gap-3">
@@ -137,13 +137,13 @@ export default function DonationSuccessScreen({
                       {impactMessage}
                     </p>
 
-                    <div className="flex items-center gap-3 bg-bg-card rounded-2xl p-4">
+                    <div className="flex items-center gap-3 bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-2xl p-4">
                       <span className="text-3xl font-bold text-primary tabular-nums">
                         <AnimatedNumber to={amountInSOL} suffix={` ${currency}`} decimals={4} />
                       </span>
                     </div>
 
-                    <div className="pt-4 mt-4 border-t border-border space-y-2">
+                    <div className="pt-4 mt-4 border-t border-white/10 space-y-2">
                       <div className="flex justify-between items-center text-sm">
                         <span className="font-semibold text-fg-muted">Transaction</span>
                         <a
@@ -155,7 +155,7 @@ export default function DonationSuccessScreen({
                           Solana Explorer ↗
                         </a>
                       </div>
-                      <div className="flex justify-between items-center bg-bg-card rounded-xl p-3 border border-border">
+                      <div className="flex justify-between items-center bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-xl p-3">
                         <span className="font-bold text-fg text-sm">
                           {amountInSOL.toFixed(4)} {currency}
                         </span>
@@ -175,14 +175,14 @@ export default function DonationSuccessScreen({
                 >
                   <button
                     onClick={handleShare}
-                    className="flex-1 bg-primary hover:bg-primary-hover text-white font-bold py-4 px-6 rounded-full shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2"
+                    className="flex-1 bg-white/[0.04] backdrop-blur-2xl border border-white/20 text-white font-bold py-4 px-6 rounded-full transition-all duration-500 ease-out active:scale-95 flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(127,191,127,0.15)] hover:shadow-[0_0_40px_rgba(127,191,127,0.3)] hover:border-primary/50 hover:bg-primary/15"
                   >
                     <Share2 size={18} />
                     Share
                   </button>
                   <button
                     onClick={onClose}
-                    className="flex-1 bg-bg-muted text-fg font-bold py-4 px-6 rounded-full hover:bg-border transition-all active:scale-95 flex items-center justify-center gap-2 border border-border"
+                    className="flex-1 bg-white/[0.04] backdrop-blur-2xl border border-white/10 text-fg-muted font-bold py-4 px-6 rounded-full transition-all duration-500 ease-out active:scale-95 flex items-center justify-center gap-2 hover:text-white hover:bg-white/10 hover:border-white/20"
                   >
                     <Home size={18} />
                     Close
@@ -190,7 +190,7 @@ export default function DonationSuccessScreen({
                   {onDonateAgain && (
                     <button
                       onClick={onDonateAgain}
-                      className="flex-1 bg-success text-white font-bold py-4 px-6 rounded-full hover:brightness-110 transition-all active:scale-95"
+                      className="flex-1 bg-white/[0.04] backdrop-blur-2xl border border-white/20 text-success font-bold py-4 px-6 rounded-full transition-all duration-500 ease-out active:scale-95 shadow-[0_0_15px_rgba(127,191,127,0.1)] hover:shadow-[0_0_40px_rgba(127,191,127,0.25)] hover:border-success/50 hover:bg-success/15"
                     >
                       Donate Again
                     </button>
@@ -198,7 +198,7 @@ export default function DonationSuccessScreen({
                 </motion.div>
               </div>
 
-              <div className="md:col-span-5 glass p-6 flex items-center justify-center relative border-l border-white/10 dark:border-white/5">
+              <div className="md:col-span-5 glass-surface p-6 flex items-center justify-center relative border-l border-white/10">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -246,7 +246,7 @@ export default function DonationSuccessScreen({
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 text-xs font-bold text-fg-subtle pt-2 border-t border-border">
+                    <div className="flex items-center gap-2 text-xs font-bold text-fg-subtle pt-2 border-t border-white/10">
                       <span>💎</span>
                       <span className="truncate">
                         MINT_ID: e627...{txSignature.slice(-4).toUpperCase()}

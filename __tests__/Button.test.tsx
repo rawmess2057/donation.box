@@ -12,14 +12,14 @@ describe("Button", () => {
   it("renders with primary variant by default", () => {
     const { container } = render(<Button>Click</Button>);
     const btn = container.querySelector("button");
-    expect(btn).toHaveClass("bg-primary");
+    expect(btn).toHaveClass("bg-white/[0.04]");
   });
 
   it("renders with secondary variant", () => {
     const { container } = render(<Button variant="secondary">Click</Button>);
     const btn = container.querySelector("button");
-    expect(btn).toHaveClass("border-2");
-    expect(btn).toHaveClass("border-accent");
+    expect(btn).toHaveClass("border-white/20");
+    expect(btn).toHaveClass("text-accent");
   });
 
   it("shows loading spinner when loading", () => {

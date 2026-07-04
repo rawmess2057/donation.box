@@ -15,13 +15,13 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    "bg-primary text-white hover:bg-primary-hover shadow-lg shadow-glow",
+    "bg-white/[0.04] backdrop-blur-2xl border border-white/20 text-white shadow-[0_0_15px_rgba(127,191,127,0.15)] hover:shadow-[0_0_40px_rgba(127,191,127,0.3)] hover:border-primary/50 hover:bg-primary/15",
   secondary:
-    "bg-transparent border-2 border-accent text-accent hover:bg-accent hover:text-white",
+    "bg-white/[0.04] backdrop-blur-2xl border border-white/20 text-accent shadow-[0_0_15px_rgba(3,225,255,0.1)] hover:shadow-[0_0_40px_rgba(3,225,255,0.25)] hover:border-accent/50 hover:text-white hover:bg-accent/15",
   ghost:
-    "bg-transparent text-fg-muted hover:bg-bg-muted hover:text-fg",
+    "bg-white/[0.04] backdrop-blur-2xl border border-white/10 text-fg-muted hover:text-white hover:bg-white/10 hover:border-white/20",
   success:
-    "bg-success text-white hover:brightness-110 shadow-lg shadow-green-200/50 dark:shadow-green-900/30",
+    "bg-white/[0.04] backdrop-blur-2xl border border-white/20 text-success shadow-[0_0_15px_rgba(127,191,127,0.1)] hover:shadow-[0_0_40px_rgba(127,191,127,0.25)] hover:border-success/50 hover:bg-success/15",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
@@ -51,7 +51,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         whileTap={!disabled && !loading ? { scale: 0.98 } : {}}
         className={`
           inline-flex items-center justify-center gap-2 font-semibold
-          transition-all duration-300 ease-out
+          transition-all duration-500 ease-out
           disabled:opacity-50 disabled:cursor-not-allowed
           ${variantStyles[variant]}
           ${sizeStyles[size]}

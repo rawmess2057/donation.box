@@ -6,6 +6,8 @@ import { ThemeProvider } from "@/lib/design-system/theme";
 import SkipLink from "@/components/ui/SkipLink";
 import ToastProviderClient from "@/components/ui/ToastProviderClient";
 import GlassFilterDefs from "@/components/layout/GlassFilterDefs";
+import GlassBackground from "@/components/layout/GlassBackground";
+import Footer from "@/components/layout/Footer";
 import "./globals.css";
 
 const headingFont = Plus_Jakarta_Sans({
@@ -37,35 +39,20 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${headingFont.variable} ${bodyFont.variable} h-full antialiased light`}
+      className={`${headingFont.variable} ${bodyFont.variable} h-full antialiased`}
       data-scroll-behavior="smooth"
-      suppressHydrationWarning
     >
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  var mode = localStorage.getItem('donationbox-theme');
-                  if (mode === 'dark' || (!mode && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                    document.documentElement.className = document.documentElement.className.replace('light', 'dark');
-                  }
-                } catch(e) {}
-              })();
-            `,
-          }}
-        />
-      </head>
       <body className="min-h-full flex flex-col">
+        <GlassBackground />
         <SkipLink />
         <ThemeProvider>
           <SolanaWalletProvider>
             <ToastProviderClient>
               <MobileNav />
-              <main id="main-content" className="flex-1">
+              <main id="main-content" className="flex-1 relative z-[1]">
                 {children}
               </main>
+              <Footer />
               <GlassFilterDefs />
             </ToastProviderClient>
           </SolanaWalletProvider>

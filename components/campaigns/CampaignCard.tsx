@@ -8,15 +8,15 @@ import Link from "next/link";
 type Props = { campaign: Campaign; index?: number };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  Education: "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300",
-  Emergency: "bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300",
-  Nutrition: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300",
-  Health: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
-  Environment: "bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300",
+  Education: "bg-primary/15 text-primary border border-primary/30",
+  Emergency: "bg-rose-950/30 text-rose-300 border border-rose-800/50",
+  Nutrition: "bg-emerald-950/30 text-emerald-300 border border-emerald-800/50",
+  Health: "bg-blue-950/30 text-blue-300 border border-blue-800/50",
+  Environment: "bg-teal-950/30 text-teal-300 border border-teal-800/50",
 };
 
 function getCategoryStyle(category: string) {
-  return CATEGORY_COLORS[category] ?? "bg-stone-100 text-stone-800 dark:bg-stone-800 dark:text-stone-200";
+  return CATEGORY_COLORS[category] ?? "bg-white/[0.08] text-fg-muted border border-white/10";
 }
 
 export default function CampaignCard({ campaign, index = 0 }: Props) {
@@ -28,7 +28,7 @@ export default function CampaignCard({ campaign, index = 0 }: Props) {
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
-      className="group relative rounded-2xl bg-bg-card shadow-sm hover:shadow-lg transition-all duration-500 ease-out"
+      className="group relative rounded-2xl bg-gradient-to-br from-primary/[0.04] via-transparent to-accent/[0.02] backdrop-blur-2xl border border-white/10 shadow-[0_0_15px_rgba(127,191,127,0.06)] hover:shadow-[0_0_30px_rgba(127,191,127,0.15)] transition-all duration-500 ease-out"
     >
       <Link href={`/campaign/${campaign.id}`} className="block">
         <div className="relative h-48 overflow-hidden rounded-t-2xl">
@@ -99,7 +99,7 @@ export default function CampaignCard({ campaign, index = 0 }: Props) {
             <span className="font-semibold text-fg-muted">{campaign.progress}%</span>
           </div>
 
-          <div className="block w-full text-center bg-primary hover:bg-primary-hover text-white font-semibold text-sm px-5 py-3 rounded-xl transition-all duration-300 shadow-lg shadow-glow hover:shadow-xl active:scale-[0.98]">
+          <div className="block w-full text-center bg-white/[0.04] backdrop-blur-2xl border border-white/20 text-white font-semibold text-sm px-5 py-3 rounded-xl transition-all duration-500 ease-out shadow-[0_0_15px_rgba(127,191,127,0.15)] hover:shadow-[0_0_40px_rgba(127,191,127,0.3)] hover:border-primary/50 hover:bg-primary/15 active:scale-[0.98]">
             Donate Now
           </div>
         </div>

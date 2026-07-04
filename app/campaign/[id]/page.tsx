@@ -3,21 +3,19 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import CampaignDonateClient from "@/components/campaigns/CampaignDonateClient";
 import ShareButton from "@/components/campaigns/ShareButton";
 import ImpactCalculator from "@/components/campaigns/ImpactCalculator";
 import RealTimeProgressVisualizer from "@/components/campaigns/RealTimeProgressVisualizer";
-import { useTheme } from "@/lib/design-system/theme";
 import { getExplorerTxUrl } from "@/lib/explorer";
 import type { CampaignRecord } from "@/lib/campaigns";
 import { fadeInUp } from "@/lib/design-system/animations";
-import { Sun, Moon } from "lucide-react";
 
 export default function CampaignDetailPage() {
   const params = useParams();
   const id = params.id as string;
-  const { mode, toggle } = useTheme();
   const [campaign, setCampaign] = useState<CampaignRecord | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -50,33 +48,96 @@ export default function CampaignDetailPage() {
   }, [id]);
 
   return (
-    <main className="min-h-screen bg-bg transition-colors duration-300">
+    <main className="min-h-screen bg-bg relative overflow-hidden">
+      {/* Solana background shapes */}
+      <motion.div
+        className="absolute top-[8%] right-[1%] w-[200px] h-[200px] pointer-events-none z-0"
+        style={{
+          background:
+            "linear-gradient(135deg, rgba(127,191,127,0.1), rgba(127,191,127,0.03))",
+          clipPath: "polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)",
+        }}
+        animate={{ x: [0, -15, 10, 0], y: [0, 12, -8, 0], rotate: [0, 5, -3, 0] }}
+        transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute bottom-[15%] left-[1%] w-[180px] h-[150px] pointer-events-none z-0"
+        style={{
+          background:
+            "linear-gradient(135deg, rgba(3,225,255,0.07), rgba(220,31,255,0.03))",
+          clipPath: "polygon(50% 0%, 0% 100%, 100% 100%)",
+        }}
+        animate={{ x: [0, 14, -8, 0], y: [0, -10, 6, 0], rotate: [0, -3, 2, 0] }}
+        transition={{ duration: 11, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+      />
+
       {isLoading ? (
-        <div className="max-w-6xl mx-auto px-4 pt-28 py-10 text-center text-fg-muted">
-          Loading campaign...
+        <div className="relative max-w-6xl mx-auto px-4 pt-10 py-10 z-[2]">
+          <div className="py-20 text-center relative">
+            <motion.div
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[160px] h-[160px] pointer-events-none"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(127,191,127,0.08), rgba(3,225,255,0.03))",
+                clipPath: "polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)",
+              }}
+              animate={{ rotate: [0, 360] }}
+              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+            />
+            <div className="relative inline-flex items-center justify-center w-14 h-14 rounded-full glass-surface mb-4">
+              <div className="w-6 h-6 border-[3px] border-border border-t-primary rounded-full animate-spin" />
+            </div>
+            <p className="text-fg-muted text-sm">
+              Loading{" "}
+              <span
+                className="bg-gradient-to-r from-primary via-accent to-success bg-clip-text text-transparent animate-shimmer"
+                style={{ backgroundSize: "200% 100%" }}
+              >
+                campaign
+              </span>
+              ...
+            </p>
+          </div>
         </div>
       ) : !campaign ? (
-        <div className="max-w-6xl mx-auto px-4 pt-28 py-10 text-center">
-          <h1 className="text-3xl font-bold text-fg">Campaign not found</h1>
-          <p className="mt-2 text-fg-muted">
-            This campaign doesn&apos;t exist or has been removed.
-          </p>
+        <div className="relative max-w-6xl mx-auto px-4 pt-10 py-10 z-[2]">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: "spring" as const, stiffness: 100, damping: 14 }}
+            className="text-center py-20"
+          >
+            <div className="inline-block bg-gradient-to-br from-primary/[0.06] via-transparent to-accent/[0.04] backdrop-blur-2xl border border-white/10 rounded-2xl p-8 max-w-sm mx-auto">
+              <h1 className="text-2xl font-bold text-fg font-[family-name:var(--font-heading)]">
+                <span
+                  className="bg-gradient-to-r from-primary via-accent to-success bg-clip-text text-transparent"
+                >
+                  Campaign
+                </span>{" "}
+                not found
+              </h1>
+              <p className="mt-2 text-fg-muted text-sm">
+                This campaign doesn&apos;t exist or has been removed.
+              </p>
+              <Link
+                href="/explore"
+                className="inline-block mt-4 text-sm font-semibold text-accent hover:text-accent-hover transition-colors duration-300"
+              >
+                Browse campaigns &rarr;
+              </Link>
+            </div>
+          </motion.div>
         </div>
       ) : (
-        <div className="max-w-6xl mx-auto px-4 pt-24 pb-10">
-          <div className="flex justify-end mb-4">
-            <button
-              onClick={toggle}
-              className="p-2.5 rounded-xl bg-bg-muted text-fg-muted hover:text-fg hover:bg-border transition-colors"
-              aria-label={`Switch to ${mode === "light" ? "dark" : "light"} mode`}
-            >
-              {mode === "light" ? <Moon size={18} /> : <Sun size={18} />}
-            </button>
-          </div>
-
+        <div className="relative max-w-6xl mx-auto px-4 pt-6 pb-10 z-[2]">
           <div className="grid gap-8 md:grid-cols-3">
             <article className="md:col-span-2 space-y-6">
-              <motion.div variants={fadeInUp} initial="hidden" animate="visible" className="relative overflow-hidden rounded-2xl">
+              <motion.div
+                variants={fadeInUp}
+                initial="hidden"
+                animate="visible"
+                className="relative overflow-hidden rounded-2xl border border-white/10"
+              >
                 <Image
                   src={campaign.image}
                   alt={campaign.title}
@@ -92,14 +153,21 @@ export default function CampaignDetailPage() {
                 )}
               </motion.div>
 
+              {/* Title & subtitle */}
               <motion.div variants={fadeInUp} initial="hidden" animate="visible" className="space-y-4">
                 <h1 className="text-3xl md:text-4xl font-bold text-fg leading-tight font-[family-name:var(--font-heading)]">
                   {campaign.title}
                 </h1>
                 <p className="text-lg text-fg-muted">{campaign.subtitle}</p>
+              </motion.div>
 
-                <div className="h-px bg-border" />
-
+              {/* The Story */}
+              <motion.div
+                variants={fadeInUp}
+                initial="hidden"
+                animate="visible"
+                className="bg-gradient-to-br from-primary/[0.04] via-transparent to-accent/[0.02] backdrop-blur-2xl border border-white/10 rounded-2xl p-6 space-y-4"
+              >
                 <h2 className="text-sm font-semibold uppercase tracking-wide text-fg-muted">
                   The Story
                 </h2>
@@ -110,7 +178,12 @@ export default function CampaignDetailPage() {
 
               <ImpactCalculator impactDescription={campaign.impactDescription} />
 
-              <motion.div variants={fadeInUp} initial="hidden" animate="visible" className="rounded-2xl glass-card p-5 space-y-3">
+              <motion.div
+                variants={fadeInUp}
+                initial="hidden"
+                animate="visible"
+                className="rounded-2xl glass-surface p-5 space-y-3"
+              >
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="rounded-full glass px-3 py-1 text-xs font-semibold text-fg-muted">
                     {campaign.category}

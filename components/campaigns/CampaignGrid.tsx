@@ -33,7 +33,7 @@ export default function CampaignGrid({ title = "Campaigns", campaigns, children,
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
-          className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           {visible.map((campaign, i) => (
             <motion.div
@@ -42,7 +42,6 @@ export default function CampaignGrid({ title = "Campaigns", campaigns, children,
                 hidden: { opacity: 0, y: 20 },
                 visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
               }}
-              className="break-inside-avoid"
             >
               <CampaignCard campaign={campaign} index={i} />
             </motion.div>
@@ -53,7 +52,7 @@ export default function CampaignGrid({ title = "Campaigns", campaigns, children,
           <div className="flex justify-center mt-10">
             <button
               onClick={() => setShowCount((prev) => Math.min(prev + INITIAL_COUNT, campaigns.length))}
-              className="px-8 py-3 bg-bg-muted text-fg font-semibold rounded-xl hover:bg-border transition-colors"
+              className="px-8 py-3 bg-white/[0.04] backdrop-blur-2xl border border-white/10 text-fg-muted font-semibold rounded-xl hover:text-white hover:bg-white/10 hover:border-white/20 transition-all duration-500 ease-out"
             >
               Load More ({campaigns.length - showCount} remaining)
             </button>

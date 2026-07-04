@@ -29,7 +29,7 @@ export default function RealTimeProgressVisualizer({
   ];
 
   return (
-    <div className={`glass-card rounded-2xl p-5 space-y-4 ${className}`}>
+    <div className={`glass-surface rounded-2xl p-5 space-y-4 ${className}`}>
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-bold text-fg font-[family-name:var(--font-heading)]">
           Impact River
