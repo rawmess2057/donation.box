@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Literata } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import MobileNav from "@/components/MobileNav";
 import SolanaWalletProvider from "@/components/solana/SolanaWalletProvider";
 import { ThemeProvider } from "@/lib/design-system/theme";
@@ -16,7 +16,7 @@ const headingFont = Plus_Jakarta_Sans({
   display: "swap",
 });
 
-const bodyFont = Literata({
+const bodyFont = Plus_Jakarta_Sans({
   variable: "--font-body",
   subsets: ["latin"],
   display: "swap",

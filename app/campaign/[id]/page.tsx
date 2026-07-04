@@ -171,7 +171,7 @@ export default function CampaignDetailPage() {
                 <h2 className="text-sm font-semibold uppercase tracking-wide text-fg-muted">
                   The Story
                 </h2>
-                <p className="leading-relaxed text-fg font-[family-name:var(--font-body)]">
+                <p className="leading-relaxed text-fg font-[family-name:var(--font-heading)]">
                   {campaign.story}
                 </p>
               </motion.div>

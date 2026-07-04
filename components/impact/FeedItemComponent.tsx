@@ -14,11 +14,11 @@ type FeedItemComponentProps = {
   onLike?: (itemId: string) => void | Promise<void>;
 };
 
-const TYPE_STYLES: Record<string, { label: string; bg: string; text: string; icon: string }> = {
-  donation: { label: "Donation", bg: "bg-success-soft", text: "text-success", icon: "🎁" },
-  update: { label: "Update", bg: "bg-accent-soft", text: "text-accent", icon: "📸" },
-  milestone: { label: "Milestone", bg: "bg-primary-soft", text: "text-primary", icon: "🏆" },
-  cnft: { label: "cNFT Proof", bg: "bg-purple-950/30", text: "text-purple-300", icon: "🪪" },
+const TYPE_STYLES: Record<string, { label: string; bg: string; text: string }> = {
+  donation: { label: "Donation", bg: "bg-success-soft", text: "text-success" },
+  update: { label: "Update", bg: "bg-accent-soft", text: "text-accent" },
+  milestone: { label: "Milestone", bg: "bg-primary-soft", text: "text-primary" },
+  cnft: { label: "cNFT Proof", bg: "bg-purple-950/30", text: "text-purple-300" },
 };
 
 const TYPE_COLORS: Record<string, string> = {
@@ -93,7 +93,7 @@ export default function FeedItemComponent({ item, index = 0, onLike }: FeedItemC
         </div>
 
         <span className={`shrink-0 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${typeStyle.bg} ${typeStyle.text}`}>
-          {typeStyle.icon} {typeStyle.label}
+          {typeStyle.label}
         </span>
       </div>
 
@@ -137,8 +137,8 @@ export default function FeedItemComponent({ item, index = 0, onLike }: FeedItemC
 
         {item.type === "milestone" && (
           <div className="bg-primary-soft rounded-xl p-4 border border-primary/20">
-            <p className="text-xs font-semibold uppercase tracking-wide text-primary mb-1">
-              🏆 Milestone Reached
+                <p className="text-xs font-semibold uppercase tracking-wide text-primary mb-1">
+                  Milestone Reached
             </p>
             <p className="text-sm font-bold text-fg">
               {item.milestone || item.content || "A new milestone has been reached!"}
@@ -154,7 +154,7 @@ export default function FeedItemComponent({ item, index = 0, onLike }: FeedItemC
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-bold uppercase tracking-wide text-purple-300 mb-1">
-                  🪪 Compressed NFT Minted
+                  Compressed NFT Minted
                 </p>
                 <p className="text-sm font-semibold text-fg">Impact verified on-chain</p>
                 {item.content && <p className="text-xs text-fg-muted mt-1">{item.content}</p>}

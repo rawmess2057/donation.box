@@ -160,8 +160,8 @@ export default function CreatorsSection() {
               <span className="text-[10px] text-primary/40">Support my campaign!</span>
             </div>
             <div className="w-full h-8 rounded-lg bg-white/[0.04] backdrop-blur-xl border border-white/10 flex items-center justify-center">
-              <span className="text-[10px] font-semibold text-primary tracking-wider">
-                ❖ Donate
+                <span className="text-[10px] font-semibold text-primary tracking-wider">
+                  Donate
               </span>
             </div>
             <span className="block text-[9px] text-fg-subtle/50 text-center">

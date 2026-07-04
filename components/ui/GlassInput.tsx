@@ -63,7 +63,7 @@ export default function GlassInput({
           disabled={disabled}
           className={[
             "w-full bg-transparent px-4 py-3 text-sm text-fg outline-none placeholder:text-fg-subtle/60",
-            "font-[family-name:var(--font-body)]",
+            "font-[family-name:var(--font-heading)]",
             leftIcon && "pl-10",
             disabled && "opacity-40 cursor-not-allowed",
           ].join(" ")}

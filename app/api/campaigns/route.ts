@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createCampaign, getAllCampaigns } from "@/lib/server/campaignRepository";
 import { isPartnerWallet } from "@/lib/server/partnerRepository";
+import { CATEGORIES } from "@/lib/categories";
 
 export const runtime = "nodejs";
 
@@ -40,6 +41,7 @@ export async function POST(request: Request) {
       !id ||
       !title ||
       !category ||
+      !CATEGORIES.includes(category) ||
       !story ||
       !Number.isFinite(goal) ||
       !creator ||
@@ -47,7 +49,7 @@ export async function POST(request: Request) {
       !createdAt
     ) {
       return NextResponse.json(
-        { error: "Missing required campaign fields" },
+        { error: "Missing or invalid campaign fields" },
         { status: 400 },
       );
     }

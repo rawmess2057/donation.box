@@ -77,7 +77,7 @@ export default function ShareButton({
                   <p className="text-sm font-medium text-fg">
                     {copied ? "Copied!" : "Copy Blink Link"}
                   </p>
-                  <p className="text-xs text-fg-subtle truncate">{blinkUrl}</p>
+                  <p className="text-xs text-fg-subtle truncate">Share on social media — opens Blink in Phantom &amp; Backpack</p>
                 </div>
               </button>
 

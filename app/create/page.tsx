@@ -9,9 +9,8 @@ import { PublicKey, Transaction, TransactionInstruction } from "@solana/web3.js"
 import { Buffer } from "buffer";
 import { createId } from "@/lib/campaigns";
 import { getNetworkLabel, getCreateActionLabel } from "@/lib/explorer";
+import { CATEGORIES } from "@/lib/categories";
 import PartnerGuard from "@/components/PartnerGuard";
-
-const CATEGORIES = ["Education", "Emergency", "Nutrition", "Health", "Environment"];
 const MEMO_PROGRAM_ID = new PublicKey("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr");
 
 const headingVariants: Variants = {

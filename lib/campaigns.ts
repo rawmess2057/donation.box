@@ -25,6 +25,7 @@ export type CampaignRecord = {
   title: string;
   subtitle: string;
   category: string;
+  // NOTE: category should use values from CATEGORIES in lib/categories.ts
   story: string;
   image: string;
   goal: number;

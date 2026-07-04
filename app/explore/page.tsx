@@ -2,19 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { motion, type Variants } from "framer-motion";
+import { CATEGORY_ICONS } from "@/lib/categories";
 import CampaignGrid from "@/components/campaigns/CampaignGrid";
 import ProjectDiscoveryFeed from "@/components/campaigns/ProjectDiscoveryFeed";
 import type { Campaign } from "@/components/campaigns/types";
 import { getNetworkLabel } from "@/lib/explorer";
 import { staggerChildren, fadeInUp } from "@/lib/design-system/animations";
-
-const CATEGORY_EMOJI: Record<string, string> = {
-  Education: "📚",
-  Emergency: "🆘",
-  Nutrition: "🍲",
-  Health: "🏥",
-  Environment: "🌳",
-};
 
 const headingVariants: Variants = {
   hidden: { opacity: 0 },
@@ -186,7 +179,10 @@ export default function ExplorePage() {
                   : "bg-white/5 backdrop-blur-xl border border-white/10 text-fg-muted hover:text-fg"
               }`}
             >
-              {CATEGORY_EMOJI[category] ?? ""} {category}
+              {(() => {
+                const Icon = CATEGORY_ICONS[category];
+                return Icon ? <Icon size={14} className="shrink-0" /> : null;
+              })()} {category}
             </motion.button>
           ))}
         </motion.div>
