@@ -88,7 +88,6 @@ data/              JSON data files (campaigns, partners)
 | `/explore` | Browse all campaigns |
 | `/dashboard` | Creator dashboard |
 | `/impact` | Donation impact feed |
-| `/blog` | Blog |
 | `/faq` | Frequently asked questions |
 | `/terms` | Terms of service |
 | `/docs` | Documentation |
