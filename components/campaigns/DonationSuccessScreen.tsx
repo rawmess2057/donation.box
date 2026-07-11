@@ -229,7 +229,7 @@ export default function DonationSuccessScreen({
                     <div className="relative w-full aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-primary/30 to-accent/30">
                       <div className="w-full h-full flex items-center justify-center">
                         <div className="text-center">
-                          <div className="text-5xl mb-2">🔥</div>
+                          <div className="text-5xl mb-2">⚡</div>
                           <div className="text-xs font-bold text-fg-muted">Impact Proof</div>
                         </div>
                       </div>
@@ -247,7 +247,7 @@ export default function DonationSuccessScreen({
                     </div>
 
                     <div className="flex items-center gap-2 text-xs font-bold text-fg-subtle pt-2 border-t border-white/10">
-                      <span>💎</span>
+                      <span className="text-fg-subtle">◆</span>
                       <span className="truncate">
                         MINT_ID: e627...{txSignature.slice(-4).toUpperCase()}
                       </span>

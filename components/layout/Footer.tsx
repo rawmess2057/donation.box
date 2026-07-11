@@ -13,10 +13,10 @@ const columns = [
   {
     title: "Resources",
     links: [
-      { label: "Docs", href: "#" },
-      { label: "Blog", href: "#" },
-      { label: "FAQ", href: "#" },
-      { label: "Terms", href: "#" },
+      { label: "Docs", href: "/docs" },
+      { label: "Blog", href: "/blog" },
+      { label: "FAQ", href: "/faq" },
+      { label: "Terms", href: "/terms" },
     ],
   },
   {

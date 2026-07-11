@@ -3,21 +3,10 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Campaign } from "./types";
+import { getCategoryColor } from "@/lib/categories";
 import Link from "next/link";
 
 type Props = { campaign: Campaign; index?: number };
-
-const CATEGORY_COLORS: Record<string, string> = {
-  Education: "bg-primary/15 text-primary border border-primary/30",
-  Emergency: "bg-rose-950/30 text-rose-300 border border-rose-800/50",
-  Nutrition: "bg-emerald-950/30 text-emerald-300 border border-emerald-800/50",
-  Health: "bg-blue-950/30 text-blue-300 border border-blue-800/50",
-  Environment: "bg-teal-950/30 text-teal-300 border border-teal-800/50",
-};
-
-function getCategoryStyle(category: string) {
-  return CATEGORY_COLORS[category] ?? "bg-white/[0.08] text-fg-muted border border-white/10";
-}
 
 export default function CampaignCard({ campaign, index = 0 }: Props) {
   const progress = Math.min(100, campaign.progress);
@@ -48,7 +37,7 @@ export default function CampaignCard({ campaign, index = 0 }: Props) {
           </div>
 
           <span
-            className={`absolute top-3 left-3 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider shadow-sm ${getCategoryStyle(campaign.category)}`}
+            className={`absolute top-3 left-3 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider shadow-sm ${getCategoryColor(campaign.category)}`}
           >
             {campaign.category}
           </span>

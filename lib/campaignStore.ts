@@ -13,6 +13,7 @@ export type CreatedCampaign = {
   id: string;
   title: string;
   category: string;
+  // NOTE: category should use values from CATEGORIES in lib/categories.ts
   story: string;
   image: string;
   goal: number;

@@ -14,7 +14,7 @@ export function generateBlinkUrl(campaignId: string, baseUrl?: string): string {
   if (!base) {
     throw new Error("Cannot determine base URL - please provide baseUrl parameter");
   }
-  return `${base}/api/actions/donate?campaignId=${encodeURIComponent(campaignId)}`;
+  return `${base}/blink-preview/${encodeURIComponent(campaignId)}`;
 }
 
 /**

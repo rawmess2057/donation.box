@@ -47,14 +47,14 @@
   --color-border-focus: var(--border-focus);
   --color-overlay: var(--overlay);
   --font-sans: var(--font-heading);
-  --font-serif: var(--font-body);
+  --font-serif: var(--font-heading);
   --font-mono: var(--font-mono);
 }
 
 body {
   background: var(--bg);
   color: var(--fg);
-  font-family: var(--font-body, Georgia, serif);
+  font-family: var(--font-body, sans-serif);
 }
 
 h1, h2, h3, h4, h5, h6 {

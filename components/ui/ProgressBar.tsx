@@ -72,7 +72,7 @@ export default function ProgressBar({
       {milestones && (
         <div className="flex justify-between text-xs text-fg-subtle px-0.5">
           {milestones.map((m, i) => (
-            <span key={i}>{m.at >= percentage ? m.label : "✓ " + m.label}</span>
+            <span key={i}>{m.at >= percentage ? m.label : m.label}</span>
           ))}
         </div>
       )}

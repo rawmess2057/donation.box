@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { Heart } from "lucide-react";
 import AnimatedNumber from "@/components/ui/AnimatedNumber";
 
 interface ImpactCalculatorProps {
@@ -9,13 +10,6 @@ interface ImpactCalculatorProps {
   className?: string;
 }
 
-const CATEGORY_EMOJIS: Record<string, string> = {
-  Education: "📚",
-  Nutrition: "🍲",
-  Health: "🏥",
-  Environment: "🌳",
-  Emergency: "🆘",
-};
 
 export default function ImpactCalculator({
   impactDescription,
@@ -39,10 +33,10 @@ export default function ImpactCalculator({
       </h3>
 
       <div className="text-center mb-4">
-        <span className="text-4xl">💚</span>
+        <Heart size={36} className="text-primary mx-auto" />
       </div>
 
-      <p className="text-sm text-center text-fg leading-relaxed mb-5 font-[family-name:var(--font-body)]">
+      <p className="text-sm text-center text-fg leading-relaxed mb-5 font-[family-name:var(--font-heading)]">
         Your <span className="font-bold text-primary">{amount.toFixed(2)} SOL</span> provides:
         <br />
         <span className="font-semibold text-fg">{impactDescription}</span>
